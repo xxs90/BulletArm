@@ -9,7 +9,7 @@
 # Faces: 23248
 #
 ####
-mtllib shoes_left.mtl
+mtllib shoe_right.mtl
 
 vn -nan -nan -nan
 v 0.002320 0.139435 0.011434
