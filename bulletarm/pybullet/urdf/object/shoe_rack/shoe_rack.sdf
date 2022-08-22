@@ -1,26 +1,68 @@
 <?xml version='1.0' encoding='utf-8'?>
 <sdf version="1.6">
   <model name="FoodCourtBenchShort">
-   <static>true</static>
-    <link name="body">
-      <pose>0 0 0 0 0 0</pose>
+    <static>true</static>
+      <link name="body">
+        <pose>0 0 0 0 0 0</pose>
 
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <uri>meshes/FoodCourtBenchShort.obj</uri>
-          </mesh>
-        </geometry>
-      </visual>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>meshes/FoodCourtBenchShort.obj</uri>
+              <scale>1 1 0.5</scale>
+            </mesh>
+          </geometry>
+        </visual>
 
-      <collision name="collision">
-        <geometry>
-          <mesh>
-            <uri>meshes/FoodCourtBenchShort_Col.obj</uri>
-          </mesh>
-        </geometry>
-      </collision>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>meshes/FoodCourtBenchShort_Col.obj</uri>
+              <scale>1 1 0.5</scale>
+            </mesh>
+          </geometry>
+        </collision>
 
-    </link>
-  </model>
+      </link>
+
+      <link name="tabletop_left">
+        <pose>0 -0.32 0.23 0 0 0</pose>
+
+        <visual>
+          <pose frame=''>0 0 0 0 0 0</pose>
+            <geometry>
+              <box>
+                <size>0.01 0.01 0.01 </size>
+              </box>
+            </geometry>
+        </visual>
+
+      </link>
+
+      <joint name="base_to_left" type="fixed">
+        <parent>body</parent>
+        <child>tabletop_left</child>
+      </joint>
+
+      <link name="tabletop_right">
+        <pose>0 -0.12 0.23 0 0 0</pose>
+
+        <visual>
+          <pose frame=''>0 0 0 0 0 0</pose>
+            <geometry>
+              <box>
+                <size>0.01 0.01 0.01 </size>
+              </box>
+            </geometry>
+        </visual>
+
+      </link>
+
+      <joint name="base_to_right" type="fixed">
+        <parent>body</parent>
+        <child>tabletop_right</child>
+      </joint>
+
+
+    </model>
 </sdf>

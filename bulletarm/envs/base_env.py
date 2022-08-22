@@ -446,9 +446,9 @@ class BaseEnv:
     elif shape_type == constants.PLATE:
       padding = 0.2
     elif shape_type in (constants.SHOE_LEFT, constants.SHOE_RIGHT):
-      padding = 0.1
+      padding = 0.12
     elif shape_type == constants.SHOE_RACK:
-      padding = 0.2
+      padding = 0.25
     else:
       raise ValueError('Attempted to generate invalid shape.')
     return padding
@@ -467,9 +467,9 @@ class BaseEnv:
     elif shape_type == constants.PLATE:
       min_distance = 0.2
     elif shape_type in (constants.SHOE_LEFT, constants.SHOE_RIGHT):
-      min_distance = 0.1
+      min_distance = 0.12
     elif shape_type == constants.SHOE_RACK:
-      min_distance = 0.2
+      min_distance = 0.25
     else:
       raise ValueError('Attempted to generate invalid shape.')
     return min_distance

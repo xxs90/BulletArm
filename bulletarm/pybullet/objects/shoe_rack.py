@@ -15,7 +15,13 @@ class ShoeRack(PybulletObject):
     root_dir = os.path.dirname(bulletarm.__file__)
     sdf_filepath = os.path.join(root_dir, constants.OBJECTS_PATH, 'shoe_rack/shoe_rack.sdf')
     object_id = pb.loadSDF(sdf_filepath, globalScaling=scale)[0]
+    pos = (pos[0], pos[1], 0)
     pb.resetBasePositionAndOrientation(object_id, np.array(pos), np.array(rot))
-
+    pb.changeDynamics(object_id, -1, mass=0)
     super(ShoeRack, self).__init__(constants.SHOE_RACK, object_id)
 
+  def getLeftPose(self):
+    return pb.getLinkState(self.object_id, 0)
+
+  def getRightPose(self):
+    return pb.getLinkState(self.object_id, 1)

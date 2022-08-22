@@ -5,7 +5,6 @@
 
 newmtl material_0
 # shader_type beckmann
-map_Kd texture_left.png
 
 Ka 0.200000 0.200000 0.200000
 Kd 1.000000 1.000000 1.000000
