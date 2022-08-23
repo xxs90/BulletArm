@@ -25,10 +25,10 @@ class CloseLoopShoePack(CloseLoopEnv):
       while True:
         self.resetPybulletWorkspace()
         try:
-          self._generateShapes(constants.SHOE_RACK, 1, scale=0.2,
+          self._generateShapes(constants.SHOE_RACK, 1, scale=0.28,
                                random_orientation=self.random_orientation)
-          self._generateShapes(constants.SHOE_LEFT, 1, scale=0.22, random_orientation=self.random_orientation)
-          self._generateShapes(constants.SHOE_RIGHT, 1, scale=0.22, random_orientation=self.random_orientation)
+          self._generateShapes(constants.SHOE_LEFT, 1, scale=0.3, random_orientation=self.random_orientation)
+          self._generateShapes(constants.SHOE_RIGHT, 1, scale=0.3, random_orientation=self.random_orientation)
 
         except NoValidPositionException as e:
           continue
