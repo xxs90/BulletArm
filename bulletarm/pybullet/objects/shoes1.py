@@ -18,7 +18,7 @@ class ShoeRight(PybulletObject):
     sdf_filepath = os.path.join(root_dir, constants.OBJECTS_PATH, 'shoes/shoe_right.sdf')
     object_id = pb.loadSDF(sdf_filepath, globalScaling=scale)[0]
     pb.resetBasePositionAndOrientation(object_id, np.array(pos), np.array(rot))
-    pb.changeDynamics(object_id, -1, lateralFriction=20.0)
+    pb.changeDynamics(object_id, -1, mass=0.4, lateralFriction=0.6)
 
     super(ShoeRight, self).__init__(constants.SHOE_RIGHT, object_id)
 
@@ -29,6 +29,6 @@ class ShoeLeft(PybulletObject):
     sdf_filepath = os.path.join(root_dir, constants.OBJECTS_PATH, 'shoes/shoe_left.sdf')
     object_id = pb.loadSDF(sdf_filepath, globalScaling=scale)[0]
     pb.resetBasePositionAndOrientation(object_id, np.array(pos), np.array(rot))
-    pb.changeDynamics(object_id, -1, lateralFriction=20.0)
+    pb.changeDynamics(object_id, -1, mass=0.4, lateralFriction=0.6)
 
     super(ShoeLeft, self).__init__(constants.SHOE_LEFT, object_id)

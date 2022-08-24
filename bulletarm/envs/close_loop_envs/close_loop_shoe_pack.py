@@ -6,6 +6,7 @@ from bulletarm.pybullet.utils import constants
 from bulletarm.planners.close_loop_shoe_pack_planner import CloseLoopShoePackPlanner
 from bulletarm.pybullet.utils.constants import NoValidPositionException
 from bulletarm.pybullet.objects.shoe_rack import ShoeRack
+from bulletarm.pybullet.utils import transformations
 
 class CloseLoopShoePack(CloseLoopEnv):
     '''Close loop shoe packing task.
@@ -17,18 +18,18 @@ class CloseLoopShoePack(CloseLoopEnv):
   '''
 
     def __init__(self, config):
-      if 'num_objects' not in config:
-        config['num_objects'] = 2
       super().__init__(config)
+      self.previous_stage = (0, 0)
 
     def reset(self):
       while True:
         self.resetPybulletWorkspace()
+        self.previous_stage = (0, 0)
         try:
           self._generateShapes(constants.SHOE_RACK, 1, scale=0.28,
                                random_orientation=self.random_orientation)
-          self._generateShapes(constants.SHOE_LEFT, 1, scale=0.3, random_orientation=self.random_orientation)
-          self._generateShapes(constants.SHOE_RIGHT, 1, scale=0.3, random_orientation=self.random_orientation)
+          self._generateShapes(constants.SHOE_LEFT, 1, scale=0.33, random_orientation=self.random_orientation)
+          self._generateShapes(constants.SHOE_RIGHT, 1, scale=0.33, random_orientation=self.random_orientation)
 
         except NoValidPositionException as e:
           continue
@@ -49,12 +50,27 @@ class CloseLoopShoePack(CloseLoopEnv):
 
       shoe_left_pos = self.objects[1].getPosition()
       shoe_right_pos = self.objects[2].getPosition()
+      shoe_left_rot = self.objects[1].getRotation()
+      shoe_right_rot = self.objects[2].getRotation()
 
       shoe_rack_pos_left = ShoeRack.getLeftPose(self.objects[0])[0]
       shoe_rack_pos_right = ShoeRack.getRightPose(self.objects[0])[0]
 
-      return np.linalg.norm(np.array(shoe_left_pos) - np.array(shoe_rack_pos_left)) < 0.03 and \
-             np.linalg.norm(np.array(shoe_right_pos) - np.array(shoe_rack_pos_right)) < 0.03
+      stage = [0, 0]
+      finish = False
+      change = False
+      if np.linalg.norm(np.array(shoe_left_pos) - np.array(shoe_rack_pos_left)) < 0.03:
+        stage[0] = 1
+      if np.linalg.norm(np.array(shoe_right_pos) - np.array(shoe_rack_pos_right)) < 0.03:
+        stage[1] = 1
+
+      if stage[0] == 1 and stage[1] == 1 and self._checkObjUpright(self.objects[1]) and self._checkObjUpright(self.objects[2]):
+        finish = True
+        change = stage[0] and self.previous_stage[0]
+      self.previous_stage = stage
+      # print(shoe_left_rot)
+      # print(shoe_right_rot)
+      return finish and change
 
 
     def isSimValid(self):
@@ -75,12 +91,17 @@ def createCloseLoopShoePackEnv(config):
 
 
 if __name__ == '__main__':
-  env = CloseLoopShoePack({'seed': 0, 'workspace': np.array([[0.2, 0.6], [-0.2, 0.2], [0, 1]]), 'render': True})
+  env = CloseLoopShoePack({'seed': 1, 'workspace': np.array([[0.2, 0.6], [-0.2, 0.2], [0, 1]]), 'render': True})
   planner = CloseLoopShoePackPlanner(env, {})
   env.reset()
+  # count = 0
   while True:
     action = planner.getNextAction()
     (state, obs, in_hands), reward, done = env.step(action)
-
+    # import time
+    # time.sleep(0.1)
     if done:
+      # count += 1
       env.reset()
+      # if count == 6:
+        # print(count)
