@@ -47,21 +47,17 @@ class CloseLoopShoePackPlanner(CloseLoopPlanner):
     self.pick_rot_right = shoe_right_rot
     self.place_rot_left = shoe_rack_rot - np.pi / 2
     self.place_rot_right = shoe_rack_rot - np.pi / 2
-    # print('L: ', self.pick_rot_left)
-    # print('R: ', self.pick_rot_right)
-    # print('P: ', self.place_rot)
-    # print('----------------------------------------')
 
     rotate_left = abs(self.pick_rot_left - self.place_rot_left)
     rotate_right = abs(self.pick_rot_right - self.place_rot_right)
     if rotate_left > np.pi:
-      print('----------------------')
+      # print('----------------------')
       if self.place_rot_left >= 0:
         self.place_rot_left -= 2 * np.pi
       else:
         self.place_rot_left += 2 * np.pi
     if rotate_right > np.pi:
-      print('~~~~~~~~~~~~~~~~~~~~~~')
+      # print('~~~~~~~~~~~~~~~~~~~~~~')
       if self.place_rot_right >= 0:
         self.place_rot_right -= 2 * np.pi
       else:
@@ -130,10 +126,10 @@ class CloseLoopShoePackPlanner(CloseLoopPlanner):
     rot_diff = np.array(goal_rot) - current_rot
     # TODO: should this be 2pi?
     if rot_diff[2] > np.pi:
-      rot_diff[2] -= 2*np.pi
+      rot_diff[2] -= 2 * np.pi
       # print(1)
     elif rot_diff[2] < -np.pi:
-      rot_diff[2] += 2*np.pi
+      rot_diff[2] += 2 * np.pi
       # print(1)
 
     # R = np.array([[np.cos(-current_rot[-1]), -np.sin(-current_rot[-1])],

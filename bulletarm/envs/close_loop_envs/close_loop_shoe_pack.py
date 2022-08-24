@@ -50,8 +50,6 @@ class CloseLoopShoePack(CloseLoopEnv):
 
       shoe_left_pos = self.objects[1].getPosition()
       shoe_right_pos = self.objects[2].getPosition()
-      shoe_left_rot = self.objects[1].getRotation()
-      shoe_right_rot = self.objects[2].getRotation()
 
       shoe_rack_pos_left = ShoeRack.getLeftPose(self.objects[0])[0]
       shoe_rack_pos_right = ShoeRack.getRightPose(self.objects[0])[0]
@@ -64,12 +62,12 @@ class CloseLoopShoePack(CloseLoopEnv):
       if np.linalg.norm(np.array(shoe_right_pos) - np.array(shoe_rack_pos_right)) < 0.03:
         stage[1] = 1
 
-      if stage[0] == 1 and stage[1] == 1 and self._checkObjUpright(self.objects[1]) and self._checkObjUpright(self.objects[2]):
+      if stage[0] == 1 and stage[1] == 1 and \
+        self._checkObjUpright(self.objects[1]) and self._checkObjUpright(self.objects[2]):
         finish = True
         change = stage[0] and self.previous_stage[0]
       self.previous_stage = stage
-      # print(shoe_left_rot)
-      # print(shoe_right_rot)
+
       return finish and change
 
 
@@ -89,19 +87,19 @@ class CloseLoopShoePack(CloseLoopEnv):
 def createCloseLoopShoePackEnv(config):
   return CloseLoopShoePack(config)
 
-
-if __name__ == '__main__':
-  env = CloseLoopShoePack({'seed': 1, 'workspace': np.array([[0.2, 0.6], [-0.2, 0.2], [0, 1]]), 'render': True})
-  planner = CloseLoopShoePackPlanner(env, {})
-  env.reset()
-  # count = 0
-  while True:
-    action = planner.getNextAction()
-    (state, obs, in_hands), reward, done = env.step(action)
-    # import time
-    # time.sleep(0.1)
-    if done:
-      # count += 1
-      env.reset()
-      # if count == 6:
-        # print(count)
+#
+# if __name__ == '__main__':
+#   env = CloseLoopShoePack({'seed': 2, 'workspace': np.array([[0.2, 0.6], [-0.2, 0.2], [0, 1]]), 'render': True})
+#   planner = CloseLoopShoePackPlanner(env, {})
+#   env.reset()
+#   # count = 0
+#   while True:
+#     action = planner.getNextAction()
+#     (state, obs, in_hands), reward, done = env.step(action)
+#     # import time
+#     # time.sleep(0.1)
+#     if done:
+#       # count += 1
+#       env.reset()
+#       # if count == 6:
+#         # print(count)
