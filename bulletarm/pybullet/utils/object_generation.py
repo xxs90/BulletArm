@@ -27,6 +27,9 @@ from bulletarm.pybullet.objects.random_household_object_200 import RandomHouseHo
 from bulletarm.pybullet.objects.grasp_net_obj import GraspNetObject
 from bulletarm.pybullet.objects.shoes1 import ShoeLeft, ShoeRight
 from bulletarm.pybullet.objects.shoe_rack import ShoeRack
+from bulletarm.pybullet.objects.kitchen_plate import KitchenPlate
+from bulletarm.pybullet.objects.kitchen_knife import KitchenKnife
+from bulletarm.pybullet.objects.kitchen_fork import KitchenFork
 
 def generateCube(pos, rot, scale):
   ''''''
@@ -97,3 +100,12 @@ def generateShoeRight(pos, rot, scale):
 
 def generateShoeRack(pos, rot, scale):
   return ShoeRack(pos, rot, scale)
+
+def generateKitchenPlate(pos, rot, scale):
+  return KitchenPlate(pos, rot, scale)
+
+def generateKitchenKnife(pos, rot, scale):
+  return KitchenKnife(pos, rot, scale)
+
+def generateKitchenFork(pos, rot, scale):
+  return KitchenFork(pos, rot, scale)
