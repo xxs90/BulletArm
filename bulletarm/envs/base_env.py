@@ -450,11 +450,11 @@ class BaseEnv:
     elif shape_type == constants.SHOE_RACK:
       padding = 0.25
     elif shape_type == constants.KITCHEN_PLATE:
-      padding = 0.1
+      padding = 0.36 * 0.5
     elif shape_type == constants.KITCHEN_KNIFE:
-      padding = 0.1
+      padding = 0.12 * 0.8
     elif shape_type == constants.KITCHEN_FORK:
-      padding = 0.1
+      padding = 0.12
     else:
       raise ValueError('Attempted to generate invalid shape.')
     return padding
@@ -477,11 +477,11 @@ class BaseEnv:
     elif shape_type == constants.SHOE_RACK:
       min_distance = 1.4 * 0.28
     elif shape_type == constants.KITCHEN_PLATE:
-      min_distance = 0.1
+      min_distance = 0.36 * 0.5
     elif shape_type == constants.KITCHEN_KNIFE:
-      min_distance = 0.1
+      min_distance = 0.12 * 0.8
     elif shape_type == constants.KITCHEN_FORK:
-      min_distance = 0.1
+      min_distance = 0.12
     else:
       raise ValueError('Attempted to generate invalid shape.')
     return min_distance
@@ -590,8 +590,8 @@ class BaseEnv:
         handle = pb_obj_generation.generateShoeLeft(position, orientation, scale)
       elif shape_type == constants.SHOE_RIGHT:
         handle = pb_obj_generation.generateShoeRight(position, orientation, scale)
-      elif shape_type == constants.SHOE_RACK:
-        handle = pb_obj_generation.generateShoeRack(position, orientation, scale)
+      elif shape_type == constants.SHOE_RACK_SHORT:
+        handle = pb_obj_generation.generateShoeRackShort(position, orientation, scale)
       elif shape_type == constants.KITCHEN_PLATE:
         handle = pb_obj_generation.generateKitchenPlate(position, orientation, scale)
       elif shape_type == constants.KITCHEN_KNIFE:

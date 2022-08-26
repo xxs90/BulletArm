@@ -3,9 +3,9 @@ import numpy as np
 
 from bulletarm.envs.close_loop_envs.close_loop_env import CloseLoopEnv
 from bulletarm.pybullet.utils import constants
-from bulletarm.planners.close_loop_shoe_pack_planner import CloseLoopShoePackPlanner
+from bulletarm.planners.close_loop_shoe_packing_planner import CloseLoopShoePackPlanner
 from bulletarm.pybullet.utils.constants import NoValidPositionException
-from bulletarm.pybullet.objects.shoe_rack import ShoeRack
+from bulletarm.pybullet.objects.shoe_rack_short import ShoeRack
 
 class CloseLoopKitchenSettingEnv(CloseLoopEnv):
     '''Close loop shoe packing task.
@@ -23,9 +23,9 @@ class CloseLoopKitchenSettingEnv(CloseLoopEnv):
       while True:
         self.resetPybulletWorkspace()
         try:
+          self._generateShapes(constants.KITCHEN_PLATE, 1, scale=0.5, random_orientation=self.random_orientation)
+          self._generateShapes(constants.KITCHEN_KNIFE, 1, scale=0.8, random_orientation=self.random_orientation)
           self._generateShapes(constants.KITCHEN_FORK, 1, scale=1, random_orientation=self.random_orientation)
-          # self._generateShapes(constants.SHOE_LEFT, 1, scale=0.33, random_orientation=self.random_orientation)
-          # self._generateShapes(constants.SHOE_RIGHT, 1, scale=0.33, random_orientation=self.random_orientation)
 
         except NoValidPositionException as e:
           continue

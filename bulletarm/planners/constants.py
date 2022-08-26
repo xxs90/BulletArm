@@ -28,7 +28,7 @@ from bulletarm.planners.close_loop_household_picking_cluttered_planner import Cl
 from bulletarm.planners.close_loop_household_pushing_planner import CloseLoopHouseholdPushingPlanner
 from bulletarm.planners.close_loop_block_pushing_planner import CloseLoopBlockPushingPlanner
 from bulletarm.planners.close_loop_block_in_bowl_planner import CloseLoopBlockInBowlPlanner
-from bulletarm.planners.close_loop_shoe_pack_planner import CloseLoopShoePackPlanner
+from bulletarm.planners.close_loop_shoe_packing_planner import CloseLoopShoePackingPlanner
 
 PLANNERS = {
   'none': lambda *args: None,
@@ -86,5 +86,5 @@ PLANNERS = {
   'close_loop_household_pushing':CloseLoopHouseholdPushingPlanner,
   'close_loop_block_pushing':CloseLoopBlockPushingPlanner,
   'close_loop_block_in_bowl':CloseLoopBlockInBowlPlanner,
-  'close_loop_shoe_pack':CloseLoopShoePackPlanner,
+  'close_loop_shoe_packing':CloseLoopShoePackingPlanner,
 }
