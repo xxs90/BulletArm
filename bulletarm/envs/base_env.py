@@ -445,10 +445,10 @@ class BaseEnv:
       padding = 0.17
     elif shape_type == constants.PLATE:
       padding = 0.2
+    elif shape_type == constants.SHOE_RACK_SHORT:
+      padding = 0.35 * 2.5 * 0.7
     elif shape_type in (constants.SHOE_LEFT, constants.SHOE_RIGHT):
-      padding = 0.12
-    elif shape_type == constants.SHOE_RACK:
-      padding = 0.25
+      padding = 0.1 * 2.5 * 0.7
     elif shape_type == constants.KITCHEN_PLATE:
       padding = 0.36 * 0.5
     elif shape_type == constants.KITCHEN_KNIFE:
@@ -472,10 +472,10 @@ class BaseEnv:
       min_distance = 0.17
     elif shape_type == constants.PLATE:
       min_distance = 0.2
+    elif shape_type == constants.SHOE_RACK_SHORT:
+      min_distance = 0.35 * 2.5 * 0.7
     elif shape_type in (constants.SHOE_LEFT, constants.SHOE_RIGHT):
-      min_distance = 0.6 * 0.33
-    elif shape_type == constants.SHOE_RACK:
-      min_distance = 1.4 * 0.28
+      min_distance = 0.1 * 2.5 * 0.7
     elif shape_type == constants.KITCHEN_PLATE:
       min_distance = 0.36 * 0.5
     elif shape_type == constants.KITCHEN_KNIFE:

@@ -4,7 +4,7 @@
     <model name="shoe_left">
       <link name="link_left">
         <inertial>
-          <mass>0.4</mass>
+          <mass>0.2</mass>
           <inertia>
             <ixx>1</ixx>
             <ixy>0</ixy>
@@ -18,6 +18,7 @@
           <geometry>
             <mesh>
               <uri>meshes/shoe_left.obj</uri>
+              <scale>0.5 0.5 0.5</scale>
             </mesh>
           </geometry>
         </visual>
@@ -30,14 +31,11 @@
 <!--          </geometry>-->
 <!--        </visual>-->
         <collision name="collision_left">
-          <pose>0 0 0.05 0 0 0</pose>
+          <pose>0 0 0.025 0 0 0</pose>
           <geometry>
             <box>
-              <size>0.1 0.16 0.1</size>
+              <size>0.05 0.1 0.05</size>
             </box>
-            <!--          <mesh>-->
-            <!--            <uri>meshes/shoe_left.obj</uri>-->
-            <!--          </mesh>-->
           </geometry>
         </collision>
       </link>

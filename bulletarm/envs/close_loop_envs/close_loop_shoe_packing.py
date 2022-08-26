@@ -5,7 +5,7 @@ from bulletarm.envs.close_loop_envs.close_loop_env import CloseLoopEnv
 from bulletarm.pybullet.utils import constants
 from bulletarm.planners.close_loop_shoe_packing_planner import CloseLoopShoePackingPlanner
 from bulletarm.pybullet.utils.constants import NoValidPositionException
-from bulletarm.pybullet.objects.shoe_rack_short import ShoeRack
+from bulletarm.pybullet.objects.shoe_rack_short import ShoeRackShort
 from bulletarm.pybullet.utils import transformations
 
 class CloseLoopShoePacking(CloseLoopEnv):
@@ -26,10 +26,9 @@ class CloseLoopShoePacking(CloseLoopEnv):
         self.resetPybulletWorkspace()
         self.previous_stage = (0, 0)
         try:
-          self._generateShapes(constants.SHOE_RACK, 1, scale=0.28,
-                               random_orientation=self.random_orientation)
-          self._generateShapes(constants.SHOE_LEFT, 1, scale=0.33, random_orientation=self.random_orientation)
-          self._generateShapes(constants.SHOE_RIGHT, 1, scale=0.33, random_orientation=self.random_orientation)
+          self._generateShapes(constants.SHOE_RACK_SHORT, 1, scale=0.7, random_orientation=self.random_orientation)
+          self._generateShapes(constants.SHOE_LEFT, 1, scale=0.7, random_orientation=self.random_orientation)
+          self._generateShapes(constants.SHOE_RIGHT, 1, scale=0.7, random_orientation=self.random_orientation)
 
         except NoValidPositionException as e:
           continue
@@ -38,32 +37,25 @@ class CloseLoopShoePacking(CloseLoopEnv):
       return self._getObservation()
 
     def _checkTermination(self):
-      # getAABB in a list of vec3, aabbMin(x, y, z) && aabbMax(x, y, z)
-      # shoe_left: [(0.45362735534399207, 0.07344489751894974, -0.003995024502013195),
-      #             (0.5688021905454737, 0.26293470104143674, 0.07533000901011326)]
-      # shoe_right: [(0.438390291309848, -0.1566459698801372, -0.004242508927139052),
-      #              (0.5799988931674707, 0.033824630488839075, 0.07599488523946032)]
-      # shoe_rack: [(0.22149888464697737, -0.4151326071068406, -0.003207306106470992),
-      #             (0.6068047642808458, -0.24561970277595596, 0.17528780100153887)]
-      # the shoe size is (x = 0.12, y = 0.19, z = 0.08)
-      # the shoe rack size is (x = 0.8, y = 0.65, z = 0.17)
+      # the shoe size is (x = 0.052, y = 0.082, z = 0.052)
+      # the shoe rack short size is (x = 0.16, y = 0.284, z = 0.135)
 
       shoe_left_pos = self.objects[1].getPosition()
       shoe_right_pos = self.objects[2].getPosition()
 
-      shoe_rack_pos_left = ShoeRack.getLeftPose(self.objects[0])[0]
-      shoe_rack_pos_right = ShoeRack.getRightPose(self.objects[0])[0]
+      shoe_rack_pos_left = ShoeRackShort.getLeftPose(self.objects[0])[0]
+      shoe_rack_pos_right = ShoeRackShort.getRightPose(self.objects[0])[0]
 
       stage = [0, 0]
       finish = False
       change = False
-      if np.linalg.norm(np.array(shoe_left_pos)[0] - np.array(shoe_rack_pos_left)[0]) < 0.06 and \
-        np.linalg.norm(np.array(shoe_left_pos)[1] - np.array(shoe_rack_pos_left)[1]) < 0.03 and \
-        np.linalg.norm(np.array(shoe_left_pos)[2] - np.array(shoe_rack_pos_left)[2]) < 0.01:
+      if abs(np.array(shoe_left_pos)[0] - np.array(shoe_rack_pos_left)[0]) < 0.04 and \
+        abs(np.array(shoe_left_pos)[1] - np.array(shoe_rack_pos_left)[1]) < 0.02 and \
+        abs(np.array(shoe_left_pos)[2] - np.array(shoe_rack_pos_left)[2]) < 0.01:
         stage[0] = 1
-      if np.linalg.norm(np.array(shoe_right_pos)[0] - np.array(shoe_rack_pos_right)[0]) < 0.06 and \
-        np.linalg.norm(np.array(shoe_right_pos)[1] - np.array(shoe_rack_pos_right)[1]) < 0.03 and \
-        np.linalg.norm(np.array(shoe_right_pos)[2] - np.array(shoe_rack_pos_right)[2]) < 0.01:
+      if abs(np.array(shoe_right_pos)[0] - np.array(shoe_rack_pos_right)[0]) < 0.04 and \
+        abs(np.array(shoe_right_pos)[1] - np.array(shoe_rack_pos_right)[1]) < 0.02 and \
+        abs(np.array(shoe_right_pos)[2] - np.array(shoe_rack_pos_right)[2]) < 0.01:
         stage[1] = 1
 
       if stage[0] == 1 and stage[1] == 1 and \
@@ -93,8 +85,8 @@ def createCloseLoopShoePackingEnv(config):
 
 #
 # if __name__ == '__main__':
-#   env = CloseLoopShoePack({'seed': 2, 'workspace': np.array([[0.2, 0.6], [-0.2, 0.2], [0, 1]]), 'render': True})
-#   planner = CloseLoopShoePackPlanner(env, {})
+#   env = CloseLoopShoePacking({'seed': 2, 'workspace': np.array([[0.2, 0.6], [-0.2, 0.2], [0, 1]]), 'render': True})
+#   planner = CloseLoopShoePackingPlanner(env, {})
 #   env.reset()
 #   # count = 0
 #   while True:

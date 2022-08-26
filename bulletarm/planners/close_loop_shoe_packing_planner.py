@@ -1,7 +1,7 @@
 import numpy as np
 from bulletarm.planners.close_loop_planner import CloseLoopPlanner
 from bulletarm.pybullet.utils import transformations
-from bulletarm.pybullet.objects.shoe_rack_short import ShoeRack
+from bulletarm.pybullet.objects.shoe_rack_short import ShoeRackShort
 
 class CloseLoopShoePackingPlanner(CloseLoopPlanner):
   def __init__(self, env, config):
@@ -39,8 +39,8 @@ class CloseLoopShoePackingPlanner(CloseLoopPlanner):
     shoe_left_rot = transformations.euler_from_quaternion(self.env.objects[1].getRotation())[2]
     shoe_right_rot = transformations.euler_from_quaternion(self.env.objects[2].getRotation())[2]
 
-    shoe_rack_pos_left = ShoeRack.getLeftPose(self.env.objects[0])[0]
-    shoe_rack_pos_right = ShoeRack.getRightPose(self.env.objects[0])[0]
+    shoe_rack_pos_left = ShoeRackShort.getLeftPose(self.env.objects[0])[0]
+    shoe_rack_pos_right = ShoeRackShort.getRightPose(self.env.objects[0])[0]
     shoe_rack_rot = transformations.euler_from_quaternion(self.env.objects[0].getRotation())[2]
 
     self.pick_rot_left = shoe_left_rot
