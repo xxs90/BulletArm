@@ -6,7 +6,6 @@ from bulletarm.pybullet.utils import constants
 from bulletarm.planners.close_loop_shoe_packing_planner import CloseLoopShoePackingPlanner
 from bulletarm.pybullet.utils.constants import NoValidPositionException
 from bulletarm.pybullet.objects.shoe_rack_short import ShoeRackShort
-from bulletarm.pybullet.utils import transformations
 
 class CloseLoopShoePacking(CloseLoopEnv):
     '''Close loop shoe packing task.
@@ -83,9 +82,8 @@ class CloseLoopShoePacking(CloseLoopEnv):
 def createCloseLoopShoePackingEnv(config):
   return CloseLoopShoePacking(config)
 
-#
 # if __name__ == '__main__':
-#   env = CloseLoopShoePacking({'seed': 2, 'workspace': np.array([[0.2, 0.6], [-0.2, 0.2], [0, 1]]), 'render': True})
+#   env = CloseLoopShoePacking({'seed': 2, 'workspace': np.array([[0.25, 0.65], [-0.2, 0.2], [0, 1]]), 'render': True})
 #   planner = CloseLoopShoePackingPlanner(env, {})
 #   env.reset()
 #   # count = 0

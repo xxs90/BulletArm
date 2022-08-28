@@ -450,11 +450,11 @@ class BaseEnv:
     elif shape_type in (constants.SHOE_LEFT, constants.SHOE_RIGHT):
       padding = 0.1 * 2.5 * 0.7
     elif shape_type == constants.KITCHEN_PLATE:
-      padding = 0.36 * 0.5
-    elif shape_type == constants.KITCHEN_KNIFE:
-      padding = 0.12 * 0.8
+      padding = 0.48 * 0.4
     elif shape_type == constants.KITCHEN_FORK:
-      padding = 0.12
+      padding = 0.14 * 0.8
+    elif shape_type == constants.KITCHEN_KNIFE:
+      padding = 0.14 * 1
     else:
       raise ValueError('Attempted to generate invalid shape.')
     return padding
@@ -477,11 +477,12 @@ class BaseEnv:
     elif shape_type in (constants.SHOE_LEFT, constants.SHOE_RIGHT):
       min_distance = 0.1 * 2.5 * 0.7
     elif shape_type == constants.KITCHEN_PLATE:
-      min_distance = 0.36 * 0.5
-    elif shape_type == constants.KITCHEN_KNIFE:
-      min_distance = 0.12 * 0.8
+      min_distance = 0.48 * 0.4
     elif shape_type == constants.KITCHEN_FORK:
-      min_distance = 0.12
+      min_distance = 0.14 * 0.8
+    elif shape_type == constants.KITCHEN_KNIFE:
+      min_distance = 0.14 * 1
+
     else:
       raise ValueError('Attempted to generate invalid shape.')
     return min_distance
