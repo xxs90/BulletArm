@@ -39,31 +39,26 @@ class CloseLoopShoePacking(CloseLoopEnv):
       # the shoe size is (x = 0.052, y = 0.082, z = 0.052)
       # the shoe rack short size is (x = 0.16, y = 0.284, z = 0.135)
 
-      shoe_left_pos = self.objects[1].getPosition()
-      shoe_right_pos = self.objects[2].getPosition()
+      shoe_left_pos = self.objects[1].getPosition()[:2]
+      shoe_right_pos = self.objects[2].getPosition()[:2]
 
-      shoe_rack_pos_left = ShoeRackShort.getLeftPose(self.objects[0])[0]
-      shoe_rack_pos_right = ShoeRackShort.getRightPose(self.objects[0])[0]
+      shoe_rack_pos_left = ShoeRackShort.getLeftPose(self.objects[0])[0][:2]
+      shoe_rack_pos_right = ShoeRackShort.getRightPose(self.objects[0])[0][:2]
 
-      stage = [0, 0]
-      finish = False
-      change = False
-      if abs(np.array(shoe_left_pos)[0] - np.array(shoe_rack_pos_left)[0]) < 0.04 and \
-        abs(np.array(shoe_left_pos)[1] - np.array(shoe_rack_pos_left)[1]) < 0.02 and \
-        abs(np.array(shoe_left_pos)[2] - np.array(shoe_rack_pos_left)[2]) < 0.01:
-        stage[0] = 1
-      if abs(np.array(shoe_right_pos)[0] - np.array(shoe_rack_pos_right)[0]) < 0.04 and \
-        abs(np.array(shoe_right_pos)[1] - np.array(shoe_rack_pos_right)[1]) < 0.02 and \
-        abs(np.array(shoe_right_pos)[2] - np.array(shoe_rack_pos_right)[2]) < 0.01:
-        stage[1] = 1
+      if not (self._checkObjUpright(self.objects[1]) and self._checkObjUpright(self.objects[2])):
+        return False
+      if not (self.objects[0].isTouching(self.objects[1]) and self.objects[0].isTouching(self.objects[2])):
+        return False
 
-      if stage[0] == 1 and stage[1] == 1 and \
-        self._checkObjUpright(self.objects[1]) and self._checkObjUpright(self.objects[2]):
-        finish = True
-        change = stage[0] and self.previous_stage[0]
-      self.previous_stage = stage
+      finish = 0
+      if np.linalg.norm(np.array(shoe_left_pos) - np.array(shoe_rack_pos_left)) < 0.04 or \
+        np.linalg.norm(np.array(shoe_left_pos) - np.array(shoe_rack_pos_right)) < 0.04:
+        finish += 1
+      if np.linalg.norm(np.array(shoe_right_pos) - np.array(shoe_rack_pos_left)) < 0.04 or \
+        np.linalg.norm(np.array(shoe_right_pos) - np.array(shoe_rack_pos_right)) < 0.04:
+        finish += 1
 
-      return finish and change
+      return finish == 2
 
 
     def isSimValid(self):
@@ -82,18 +77,18 @@ class CloseLoopShoePacking(CloseLoopEnv):
 def createCloseLoopShoePackingEnv(config):
   return CloseLoopShoePacking(config)
 
-if __name__ == '__main__':
-  env = CloseLoopShoePacking({'seed': 2, 'workspace': np.array([[0.25, 0.65], [-0.2, 0.2], [0, 1]]), 'render': True})
-  planner = CloseLoopShoePackingPlanner(env, {})
-  env.reset()
-  # count = 0
-  while True:
-    action = planner.getNextAction()
-    (state, _, obs), reward, done = env.step(action)
-    # import time
-    # time.sleep(0.1)
-    if done:
-      # count += 1
-      env.reset()
-      # if count == 6:
-        # print(count)
+# if __name__ == '__main__':
+#   env = CloseLoopShoePacking({'seed': 2, 'workspace': np.array([[0.25, 0.65], [-0.2, 0.2], [0, 1]]), 'render': True})
+#   planner = CloseLoopShoePackingPlanner(env, {})
+#   env.reset()
+#   # count = 0
+#   while True:
+#     action = planner.getNextAction()
+#     (state, _, obs), reward, done = env.step(action)
+#     # import time
+#     # time.sleep(0.1)
+#     if done:
+#       # count += 1
+#       env.reset()
+#       # if count == 6:
+#         # print(count)
