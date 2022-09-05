@@ -1,26 +1,46 @@
 <?xml version="1.0" ?>
 <robot name="knife.urdf">
-  <link name="knifeLink">
+  <link name="knifeBase">
     <contact>
       <lateral_friction value="1.0"/>
       <inertia_scaling value="3.0"/>
     </contact>
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-       <mass value=".1"/>
+       <mass value=".2"/>
        <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="knife.obj" scale="0.02 0.02 0.02"/>
+        <mesh filename="knife.obj" scale="0.02 0.02 0.03"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="-0.01 0.005 -0.015"/>
       <geometry>
-        <mesh filename="knife.obj" scale="0.02 0.02 0.02"/>
+        <box size="0.1 0.02 0.03"/>
       </geometry>
     </collision>
   </link>
+
+  <link name="knifeGrasp">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0"/>
+      <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+<!--    <visual>-->
+<!--      <origin rpy="0 0 0" xyz="0 0 0"/>-->
+<!--      <geometry>-->
+<!--        <box size="0.01 0.01 0.01"/>-->
+<!--      </geometry>-->
+<!--    </visual>-->
+  </link>
+
+  <joint name="base2left" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.03 0 0"/>
+    <parent link="knifeBase"/>
+    <child link="knifeGrasp"/>
+  </joint>
 </robot>

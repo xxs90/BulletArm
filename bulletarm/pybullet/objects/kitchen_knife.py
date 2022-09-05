@@ -19,3 +19,6 @@ class KitchenKnife(PybulletObject):
     object_id = pb.loadURDF(urdf_filepath, basePosition=pos, baseOrientation=rot, globalScaling=scale)
 
     super(KitchenKnife, self).__init__(constants.KITCHEN_PLATE, object_id)
+
+  def getGraspPose(self):
+    return pb.getLinkState(self.object_id, 0)

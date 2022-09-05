@@ -1,7 +1,9 @@
 import numpy as np
 from bulletarm.planners.close_loop_planner import CloseLoopPlanner
 from bulletarm.pybullet.utils import transformations
-# from bulletarm.pybullet.objects.shoe_rack_short import ShoeRackShort
+from bulletarm.pybullet.objects.kitchen_plate import KitchenPlate
+from bulletarm.pybullet.objects.kitchen_fork import KitchenFork
+from bulletarm.pybullet.objects.kitchen_knife import KitchenKnife
 
 class CloseLoopKitchenSettingPlanner(CloseLoopPlanner):
   def __init__(self, env, config):
@@ -34,17 +36,22 @@ class CloseLoopKitchenSettingPlanner(CloseLoopPlanner):
     return self.env._encodeAction(p, x, y, z, r)
 
   def setWaypoints(self):
-    plate_pos = self.env.objects[0].getPosition()
-    fork_pos = self.env.objects[1].getPosition()
-    # knife_pos = self.env.objects[2].getPosition()
+    plate_pos_left = KitchenPlate.getLeftPos(self.env.objects[0])[0]
+    plate_pos_right = KitchenPlate.getRightPos(self.env.objects[0])[0]
     plate_rot = transformations.euler_from_quaternion(self.env.objects[0].getRotation())[2]
+
+    fork_pos = self.env.objects[1].getPosition()
+    knife_pos = KitchenKnife.getGraspPose(self.env.objects[2])[0]
+
     fork_rot = transformations.euler_from_quaternion(self.env.objects[1].getRotation())[2]
-    # knife_rot = transformations.euler_from_quaternion(self.env.objects[2].getRotation())[2]
+    knife_rot = transformations.euler_from_quaternion(self.env.objects[2].getRotation())[2]
+
+
 
     self.pick_rot_fork = fork_rot + np.pi / 2
-    # self.pick_rot_knife = knife_rot
-    self.place_rot_fork = plate_rot
-    # self.place_rot_knife = plate_rot
+    self.pick_rot_knife = knife_rot + np.pi / 2
+    self.place_rot_fork = plate_rot + np.pi / 2
+    self.place_rot_knife = plate_rot + np.pi / 2
 
     # rotate_fork = abs(self.pick_rot_fork - self.place_rot_fork)
     # rotate_knife = abs(self.pick_rot_knife - self.place_rot_knife)
@@ -64,12 +71,12 @@ class CloseLoopKitchenSettingPlanner(CloseLoopPlanner):
     self.pre_grasp_pos_fork = [fork_pos[0], fork_pos[1], fork_pos[2] + 0.05]
     self.grasp_pos_fork = [fork_pos[0], fork_pos[1], fork_pos[2]]
     self.post_grasp_pos_fork = [fork_pos[0], fork_pos[1], fork_pos[2] + 0.05]
-    self.release_pos_fork = [plate_pos[0], plate_pos[1], plate_pos[2] + 0.06]
+    self.release_pos_fork = [plate_pos_left[0], plate_pos_left[1], plate_pos_left[2] + 0.03]
 
-    # self.pre_grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.15]
-    # self.grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.005]
-    # self.post_grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.15]
-    # self.release_pos_knife = [plate_pos[0], plate_pos[1], plate_pos[2] + 0.06]
+    self.pre_grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.15]
+    self.grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.005]
+    self.post_grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.15]
+    self.release_pos_knife = [plate_pos_right[0], plate_pos_right[1], plate_pos_right[2] + 0.03]
 
   def setNewTarget(self):
     if self.stage == 0:     #arrive fork
@@ -87,22 +94,22 @@ class CloseLoopKitchenSettingPlanner(CloseLoopPlanner):
       self.stage = 4
     elif self.stage == 4:   #release fork
       self.current_target = (self.release_pos_fork, self.place_rot_fork, 0, 1)
+      self.stage = 5
+    elif self.stage == 5:   #arrive knife
+      self.current_target = (self.pre_grasp_pos_knife, self.pick_rot_knife, 1, 1)
+      self.stage = 6
+    elif self.stage == 6:   #grasp knife
+      self.current_target = (self.grasp_pos_knife, self.pick_rot_knife, 1, 0)
+      self.stage = 7
+    elif self.stage == 7:   #lift knife
+      self.current_target = (self.post_grasp_pos_knife, self.pick_rot_knife, 0, 0)
+      self.stage = 8
+    elif self.stage == 8:   #before release knife
+      self.current_target = (self.release_pos_knife, self.place_rot_knife, 0, 0)
+      self.stage = 9
+    elif self.stage == 9:   #release knife
+      self.current_target = (self.release_pos_knife, self.place_rot_knife, 0, 1)
       self.stage = 0
-    # elif self.stage == 5:   #arrive knife
-    #   self.current_target = (self.pre_grasp_pos_knife, self.pick_rot_knife, 1, 1)
-    #   self.stage = 6
-    # elif self.stage == 6:   #grasp knife
-    #   self.current_target = (self.grasp_pos_knife, self.pick_rot_knife, 1, 0)
-    #   self.stage = 7
-    # elif self.stage == 7:   #lift knife
-    #   self.current_target = (self.post_grasp_pos_knife, self.pick_rot_knife, 0, 0)
-    #   self.stage = 8
-    # elif self.stage == 8:   #before release knife
-    #   self.current_target = (self.release_pos_knife, self.place_rot_knife, 0, 0)
-    #   self.stage = 9
-    # elif self.stage == 9:   #release knife
-    #   self.current_target = (self.release_pos_knife, self.place_rot_knife, 0, 1)
-    #   self.stage = 0
 
   def getNextAction(self):
     if self.env.current_episode_steps == 1:

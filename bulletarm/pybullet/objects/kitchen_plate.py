@@ -61,15 +61,9 @@ class KitchenPlate(PybulletObject):
 
     super(KitchenPlate, self).__init__(constants.KITCHEN_LOBSTER_PLATE, object_id)
 
-  def getGraspRotation(self):
-    link_state = pb.getLinkState(self.object_id, 0)
-    rot_q = link_state[1]
-    return list(rot_q)
+  def getLeftPos(self):
+    return pb.getLinkState(self.object_id, 0)
 
-  def getGraspPosition(self):
-    link_state = pb.getLinkState(self.object_id, 0)
-    pos = link_state[0]
-    return list(pos)
+  def getRightPos(self):
+    return pb.getLinkState(self.object_id, 1)
 
-  def getGraspPose(self):
-    return self.getGraspPosition(), self.getGraspRotation()
