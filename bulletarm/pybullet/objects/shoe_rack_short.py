@@ -13,7 +13,7 @@ from bulletarm.pybullet.utils import transformations
 class ShoeRackShort(PybulletObject):
   def __init__(self, pos, rot, scale):
     root_dir = os.path.dirname(bulletarm.__file__)
-    sdf_filepath = os.path.join(root_dir, constants.OBJECTS_PATH, 'shoe_rack/shoe_rack_short.sdf')
+    sdf_filepath = os.path.join(root_dir, constants.OBJECTS_PATH, 'shoe_pack/shoe_rack/shoe_rack_short.sdf')
     object_id = pb.loadSDF(sdf_filepath, globalScaling=scale)[0]
     pos = (pos[0], pos[1], 0)
     pb.resetBasePositionAndOrientation(object_id, np.array(pos), np.array(rot))

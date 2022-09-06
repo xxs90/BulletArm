@@ -25,7 +25,8 @@ class CloseLoopShoePacking(CloseLoopEnv):
         self.resetPybulletWorkspace()
         self.previous_stage = (0, 0)
         try:
-          self._generateShapes(constants.SHOE_RACK_SHORT, 1, scale=0.7, random_orientation=self.random_orientation)
+          # self._generateShapes(constants.BENCH, 1, scale=1, rot=[(0, 0, 0, 1)])
+          self._generateShapes(constants.BENCH, 1, scale=0.8, random_orientation=self.random_orientation)
           self._generateShapes(constants.SHOE_LEFT, 1, scale=0.7, random_orientation=self.random_orientation)
           self._generateShapes(constants.SHOE_RIGHT, 1, scale=0.7, random_orientation=self.random_orientation)
 
@@ -38,6 +39,7 @@ class CloseLoopShoePacking(CloseLoopEnv):
     def _checkTermination(self):
       # the shoe size is (x = 0.052, y = 0.082, z = 0.052)
       # the shoe rack short size is (x = 0.16, y = 0.284, z = 0.135)
+      # the bench size is (x = 0.282, y = 0.135, z = 0.148)
 
       shoe_left_pos = self.objects[1].getPosition()[:2]
       shoe_right_pos = self.objects[2].getPosition()[:2]
@@ -78,7 +80,7 @@ def createCloseLoopShoePackingEnv(config):
   return CloseLoopShoePacking(config)
 
 # if __name__ == '__main__':
-#   env = CloseLoopShoePacking({'seed': 2, 'workspace': np.array([[0.25, 0.65], [-0.2, 0.2], [0, 1]]), 'render': True})
+#   env = CloseLoopShoePacking({'seed': 1, 'workspace': np.array([[0.25, 0.65], [-0.2, 0.2], [0, 1]]), 'render': True})
 #   planner = CloseLoopShoePackingPlanner(env, {})
 #   env.reset()
 #   # count = 0

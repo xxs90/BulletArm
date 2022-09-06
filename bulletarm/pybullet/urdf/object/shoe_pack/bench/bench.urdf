@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<robot name="bench.urdf">
+  <link name="benchBase">
+    <contact>
+      <lateral_friction value="1.0"/>
+      <inertia_scaling value="3.0"/>
+    </contact>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+       <mass value="0"/>
+       <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="bench.obj" scale="0.015 0.011 0.01"/>
+      </geometry>
+<!--      <material name="">-->
+<!--        <color rgba="0.96 0.76 0.13 1.0"/>-->
+<!--      </material>-->
+    </visual>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.05 -0.06 0.105"/>
+      <geometry>
+        <box size="0.03 0.03 0.03"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.96 0.76 0.13 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="bench.obj" scale="0.015 0.015 0.01"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="benchLeft">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0"/>
+      <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+<!--    <visual>-->
+<!--      <origin rpy="0 0 0" xyz="0 0 0"/>-->
+<!--      <geometry>-->
+<!--        <box size="0.01 0.01 0.01"/>-->
+<!--      </geometry>-->
+<!--    </visual>-->
+  </link>
+  <joint name="base2left" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0.015 0.11"/>
+    <parent link="benchBase"/>
+    <child link="benchLeft"/>s
+  </joint>
+
+  <link name="benchRight">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0"/>
+      <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+    </inertial>
+<!--    <visual>-->
+<!--      <origin rpy="0 0 0" xyz="0 0 0"/>-->
+<!--      <geometry>-->
+<!--        <box size="0.01 0.01 0.01"/>-->
+<!--      </geometry>-->
+<!--    </visual>-->
+  </link>
+  <joint name="base2right" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0.075 0.11"/>
+    <parent link="benchBase"/>
+    <child link="benchRight"/>
+  </joint>
+</robot>

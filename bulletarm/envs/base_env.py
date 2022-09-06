@@ -447,6 +447,8 @@ class BaseEnv:
       padding = 0.2
     elif shape_type == constants.SHOE_RACK_SHORT:
       padding = 0.35 * 2.5 * 0.7
+    elif shape_type == constants.BENCH:
+      padding = 0.32 * 2.5 * 0.8
     elif shape_type in (constants.SHOE_LEFT, constants.SHOE_RIGHT):
       padding = 0.1 * 2.5 * 0.7
     elif shape_type == constants.KITCHEN_PLATE:
@@ -476,6 +478,8 @@ class BaseEnv:
       min_distance = 0.2
     elif shape_type == constants.SHOE_RACK_SHORT:
       min_distance = 0.35 * 2.5 * 0.7
+    elif shape_type == constants.BENCH:
+      min_distance = 0.32 * 2.5 * 0.8
     elif shape_type in (constants.SHOE_LEFT, constants.SHOE_RIGHT):
       min_distance = 0.1 * 2.5 * 0.7
     elif shape_type == constants.KITCHEN_PLATE:
@@ -591,6 +595,8 @@ class BaseEnv:
         handle = pb_obj_generation.generateRandomHouseHoldObj200(position, orientation, scale, model_id)
       elif shape_type == constants.GRASP_NET_OBJ:
         handle = pb_obj_generation.generateGraspNetObject(position, orientation, scale, model_id)
+      elif shape_type == constants.BENCH:
+        handle = pb_obj_generation.generateBench(position, orientation, scale)
       elif shape_type == constants.SHOE_LEFT:
         handle = pb_obj_generation.generateShoeLeft(position, orientation, scale)
       elif shape_type == constants.SHOE_RIGHT:
