@@ -7,7 +7,7 @@
     </contact>
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-       <mass value=".1"/>
+       <mass value=".2"/>
        <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
     </inertial>
     <visual>
@@ -19,10 +19,22 @@
         <color rgba="0.96 0.76 0.13 1.0"/>
       </material>
     </visual>
+<!--    <visual>-->
+<!--      <origin rpy="0 0 0" xyz="0 0 0.008"/>-->
+<!--      <geometry>-->
+<!--        <box size="0.08 0.015 0.02"/>-->
+<!--      </geometry>-->
+<!--    </visual>-->
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="fork.obj" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.008"/>
+      <geometry>
+        <box size="0.08 0.015 0.02"/>
       </geometry>
     </collision>
   </link>

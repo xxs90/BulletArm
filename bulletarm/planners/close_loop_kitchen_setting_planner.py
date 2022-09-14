@@ -50,8 +50,8 @@ class CloseLoopKitchenSettingPlanner(CloseLoopPlanner):
 
     self.pick_rot_fork = fork_rot + np.pi / 2
     self.pick_rot_knife = knife_rot + np.pi / 2
-    self.place_rot_fork = plate_rot + np.pi / 2
-    self.place_rot_knife = plate_rot + np.pi / 2
+    self.place_rot_fork = plate_rot - np.pi / 2
+    self.place_rot_knife = plate_rot - np.pi / 2
 
     # rotate_fork = abs(self.pick_rot_fork - self.place_rot_fork)
     # rotate_knife = abs(self.pick_rot_knife - self.place_rot_knife)
@@ -68,23 +68,23 @@ class CloseLoopKitchenSettingPlanner(CloseLoopPlanner):
     #   else:
     #     self.place_rot_knife += 2 * np.pi
 
-    self.pre_grasp_pos_fork = [fork_pos[0], fork_pos[1], fork_pos[2] + 0.05]
+    self.pre_grasp_pos_fork = [fork_pos[0], fork_pos[1], fork_pos[2] + 0.1]
     self.grasp_pos_fork = [fork_pos[0], fork_pos[1], fork_pos[2]]
-    self.post_grasp_pos_fork = [fork_pos[0], fork_pos[1], fork_pos[2] + 0.05]
+    self.post_grasp_pos_fork = [fork_pos[0], fork_pos[1], fork_pos[2] + 0.1]
     self.release_pos_fork = [plate_pos_left[0], plate_pos_left[1], plate_pos_left[2] + 0.03]
 
-    self.pre_grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.15]
-    self.grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.005]
-    self.post_grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.15]
+    self.pre_grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.1]
+    self.grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2]]
+    self.post_grasp_pos_knife = [knife_pos[0], knife_pos[1], knife_pos[2] + 0.1]
     self.release_pos_knife = [plate_pos_right[0], plate_pos_right[1], plate_pos_right[2] + 0.03]
 
   def setNewTarget(self):
     if self.stage == 0:     #arrive fork
       self.setWaypoints()
-      self.current_target = (self.pre_grasp_pos_fork, self.pick_rot_fork, 1, 1)
+      self.current_target = (self.pre_grasp_pos_fork, self.pick_rot_fork, 1, 0.5)
       self.stage = 1
     elif self.stage == 1:   #grasp fork
-      self.current_target = (self.grasp_pos_fork, self.pick_rot_fork, 1, 0)
+      self.current_target = (self.grasp_pos_fork, self.pick_rot_fork, 0.5, 0)
       self.stage = 2
     elif self.stage == 2:   #lift fork
       self.current_target = (self.post_grasp_pos_fork, self.pick_rot_fork, 0, 0)
@@ -96,10 +96,10 @@ class CloseLoopKitchenSettingPlanner(CloseLoopPlanner):
       self.current_target = (self.release_pos_fork, self.place_rot_fork, 0, 1)
       self.stage = 5
     elif self.stage == 5:   #arrive knife
-      self.current_target = (self.pre_grasp_pos_knife, self.pick_rot_knife, 1, 1)
+      self.current_target = (self.pre_grasp_pos_knife, self.pick_rot_knife, 1, 0.5)
       self.stage = 6
     elif self.stage == 6:   #grasp knife
-      self.current_target = (self.grasp_pos_knife, self.pick_rot_knife, 1, 0)
+      self.current_target = (self.grasp_pos_knife, self.pick_rot_knife, 0.5, 0)
       self.stage = 7
     elif self.stage == 7:   #lift knife
       self.current_target = (self.post_grasp_pos_knife, self.pick_rot_knife, 0, 0)

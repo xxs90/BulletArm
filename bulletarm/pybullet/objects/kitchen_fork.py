@@ -17,5 +17,6 @@ class KitchenFork(PybulletObject):
     root_dir = os.path.dirname(bulletarm.__file__)
     urdf_filepath = os.path.join(root_dir, constants.OBJECTS_PATH, 'kitchen_set/fork/fork.urdf')
     object_id = pb.loadURDF(urdf_filepath, basePosition=pos, baseOrientation=rot, globalScaling=scale)
+    pb.changeDynamics(object_id, -1, lateralFriction=0.3)
 
     super(KitchenFork, self).__init__(constants.KITCHEN_PLATE, object_id)

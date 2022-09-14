@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 from bulletarm import env_factory
 
 class TestBulletCloseLoopShoePacking(unittest.TestCase):
-  env_config = {'workspace': np.array([[0.2, 0.6], [-0.2, 0.2], [0, 1]])}
+  env_config = {'workspace': np.array([[0.25, 0.65], [-0.2, 0.2], [0.01, 0.25]])}
 
   planner_config = {'random_orientation': True, 'dpos': 0.05, 'drot': np.pi/2}
 
   def testPlanner2(self):
-    self.env_config['render'] = False
+    self.env_config['render'] = True
     self.env_config['seed'] = 0
     num_processes = 10
     env = env_factory.createEnvs(num_processes, 'close_loop_shoe_packing', self.env_config, self.planner_config)

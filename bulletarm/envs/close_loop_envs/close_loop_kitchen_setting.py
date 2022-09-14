@@ -5,7 +5,10 @@ from bulletarm.envs.close_loop_envs.close_loop_env import CloseLoopEnv
 from bulletarm.pybullet.utils import constants
 from bulletarm.planners.close_loop_kitchen_setting_planner import CloseLoopKitchenSettingPlanner
 from bulletarm.pybullet.utils.constants import NoValidPositionException
-# from bulletarm.pybullet.objects.shoe_rack_short import ShoeRack
+from bulletarm.pybullet.objects.kitchen_plate import KitchenPlate
+from bulletarm.pybullet.objects.kitchen_fork import KitchenFork
+from bulletarm.pybullet.objects.kitchen_knife import KitchenKnife
+
 
 class CloseLoopKitchenSettingEnv(CloseLoopEnv):
     '''Close loop shoe packing task.
@@ -38,31 +41,27 @@ class CloseLoopKitchenSettingEnv(CloseLoopEnv):
 
     def _checkTermination(self):
       # lobster plate size is (x = 0.160, y = 0.160, z = 0.034)
-      # plate size is (x = 0.281, y = 0.390, z = 0.042)
       # knife size is (x = 0.108, y = 0.030, z = 0.022)
       # fork size is (x = 0.109, y = 0.020, z = 0.021)
 
-      # shoe_left_pos = self.objects[1].getPosition()
-      # shoe_right_pos = self.objects[2].getPosition()
-      #
-      # shoe_rack_pos_left = ShoeRack.getLeftPose(self.objects[0])[0]
-      # shoe_rack_pos_right = ShoeRack.getRightPose(self.objects[0])[0]
-      #
-      # stage = [0, 0]
-      # finish = False
-      # change = False
-      # if np.linalg.norm(np.array(shoe_left_pos) - np.array(shoe_rack_pos_left)) < 0.03:
-      #   stage[0] = 1
-      # if np.linalg.norm(np.array(shoe_right_pos) - np.array(shoe_rack_pos_right)) < 0.03:
-      #   stage[1] = 1
-      #
-      # if stage[0] == 1 and stage[1] == 1 and \
-      #   self._checkObjUpright(self.objects[1]) and self._checkObjUpright(self.objects[2]):
-      #   finish = True
-      #   change = stage[0] and self.previous_stage[0]
-      # self.previous_stage = stage
+      fork_pos = self.objects[1].getPosition()
+      knife_pos = KitchenKnife.getGraspPose(self.objects[2])[0]
 
-      return False
+      plate_pos_left = KitchenPlate.getLeftPos(self.objects[0])[0]
+      plate_pos_right = KitchenPlate.getRightPos(self.objects[0])[0]
+
+      if not (self._checkObjUpright(self.objects[1]) and self._checkObjUpright(self.objects[2])):
+        return False
+
+      finish = 0
+      if np.linalg.norm(np.array(fork_pos[:2]) - np.array(plate_pos_left[:2])) < 0.03 \
+              and np.linalg.norm(np.array(fork_pos[2]) - np.array(plate_pos_left[2])) < 0.01:
+        finish += 1
+      if np.linalg.norm(np.array(knife_pos[:2]) - np.array(plate_pos_right[:2])) < 0.03 \
+              and np.linalg.norm(np.array(knife_pos[2]) - np.array(plate_pos_right[2])) < 0.01:
+        finish += 1
+
+      return finish == 2
 
 
     def isSimValid(self):
@@ -82,18 +81,18 @@ def createCloseLoopKitchenSettingEnv(config):
   return CloseLoopKitchenSettingEnv(config)
 
 
-if __name__ == '__main__':
-  env = CloseLoopKitchenSettingEnv({'seed': 0, 'render': True})
-  planner = CloseLoopKitchenSettingPlanner(env, {})
-  env.reset()
-  # count = 0
-  while True:
-    action = planner.getNextAction()
-    (state, obs, in_hands), reward, done = env.step(action)
-  #   # import time
-  #   # time.sleep(0.1)
-    if done:
-  #     # count += 1
-      env.reset()
-  #     # if count == 6:
-  #       # print(count)
+# if __name__ == '__main__':
+#   env = CloseLoopKitchenSettingEnv({'seed': 0, 'render': True})
+#   planner = CloseLoopKitchenSettingPlanner(env, {})
+#   env.reset()
+#   # count = 0
+#   while True:
+#     action = planner.getNextAction()
+#     (state, obs, in_hands), reward, done = env.step(action)
+#     import time
+#     # time.sleep(0.1)
+#     if done:
+#   #     # count += 1
+#       env.reset()
+#   #     # if count == 6:
+#   #       # print(count)
