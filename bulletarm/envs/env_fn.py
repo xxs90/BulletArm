@@ -67,6 +67,7 @@ from bulletarm.envs.close_loop_envs.close_loop_household_picking_cluttered impor
 from bulletarm.envs.close_loop_envs.close_loop_block_pushing import createCloseLoopBlockPushingEnv
 from bulletarm.envs.close_loop_envs.close_loop_block_in_bowl import createCloseLoopBlockInBowlEnv
 from bulletarm.envs.close_loop_envs.close_loop_shoe_packing import createCloseLoopShoePackingEnv
+from bulletarm.envs.close_loop_envs.close_loop_fixed_shoe_packing import createCloseLoopFixedShoePackingEnv
 from bulletarm.envs.close_loop_envs.close_loop_kitchen_setting import createCloseLoopKitchenSettingEnv
 
 CREATE_ENV_FNS = {
@@ -132,5 +133,6 @@ CREATE_ENV_FNS = {
   'close_loop_block_pushing': createCloseLoopBlockPushingEnv,
   'close_loop_block_in_bowl': createCloseLoopBlockInBowlEnv,
   'close_loop_shoe_packing': createCloseLoopShoePackingEnv,
+  'close_loop_fixed_shoe_packing': createCloseLoopFixedShoePackingEnv,
   'close_loop_kitchen_setting': createCloseLoopKitchenSettingEnv,
 }

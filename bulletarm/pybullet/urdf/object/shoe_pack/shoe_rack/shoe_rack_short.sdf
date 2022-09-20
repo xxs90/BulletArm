@@ -21,7 +21,7 @@
           <geometry>
             <mesh>
               <uri>meshes/FoodCourtBenchShort.obj</uri>
-              <scale>0.45 0.3 0.3</scale>
+              <scale>0.45 0.25 0.2</scale>
             </mesh>
           </geometry>
         </visual>
@@ -30,7 +30,7 @@
           <geometry>
             <mesh>
               <uri>meshes/FoodCourtBenchShort_Col.obj</uri>
-              <scale>0.45 0.3 0.3</scale>
+              <scale>0.45 0.25 0.2</scale>
             </mesh>
           </geometry>
         </collision>
@@ -111,14 +111,14 @@
         </inertial>
         <pose>-0.07 -0.13 0.135 0 0 0</pose>
 
-        <visual>
-          <pose frame=''>0 0 0 0 0 0</pose>
-          <geometry>
-            <box>
-              <size>0.025 0.025 0.025 </size>
-            </box>
-          </geometry>
-        </visual>
+<!--        <visual>-->
+<!--          <pose frame=''>0 0 0 0 0 0</pose>-->
+<!--          <geometry>-->
+<!--            <box>-->
+<!--              <size>0.025 0.025 0.025 </size>-->
+<!--            </box>-->
+<!--          </geometry>-->
+<!--        </visual>-->
 
       </link>
 
