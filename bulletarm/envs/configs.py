@@ -80,6 +80,14 @@ DEFAULT_CONFIG = {
   'view_scale': 1.5,
   # The type of observation. Choices: 'pixel', 'vec'
   'obs_type': 'pixel',
+  # if true, use a white plane; if false, use the default white/blue grid plane from pybullet
+  'white_plane': False,
+  # if true, add a black visual shape to cover the workspace
+  'black_workspace': False,
+  # if true, make the plane transparent
+  'trans_plane': False,
+  # if true, make the robot transparent
+  'trans_robot': False,
 
   ## Deprecated parameters ##
   'pos_candidate': None,
