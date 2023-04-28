@@ -47,3 +47,17 @@ class HouseBuilding1Env(BaseEnv):
 
 def createHouseBuilding1Env(config):
   return HouseBuilding1Env(config)
+
+
+from bulletarm.planners.house_building_1_planner import HouseBuilding1Planner
+if __name__ == '__main__':
+  env = HouseBuilding1Env({'seed': 0, 'render': True})
+  planner = HouseBuilding1Planner(env, {})
+  env.reset()
+
+  while True:
+    action = planner.getNextAction()
+    (state, obs, in_hands), reward, done = env.step(action)
+
+    if done:
+      env.reset()
