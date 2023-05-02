@@ -457,7 +457,8 @@ class BaseEnv:
 
   def _getDefaultBoarderPadding(self, shape_type):
     if shape_type in (constants.CUBE, constants.TRIANGLE, constants.RANDOM, constants.CYLINDER, constants.RANDOM_BLOCK,
-                      constants.RANDOM_HOUSEHOLD, constants.BOTTLE, constants.TEST_TUBE, constants.SWAB):
+                      constants.RANDOM_HOUSEHOLD, constants.BOTTLE, constants.TEST_TUBE, constants.SWAB,
+                      constants.CUBE_BIG, constants.TRIANGLE_BIG):
       padding = self.max_block_size * 2.4
     elif shape_type in (constants.BRICK, constants.ROOF, constants.CUP, constants.SPOON, constants.BOX,
                         constants.FLAT_BLOCK):
@@ -472,7 +473,7 @@ class BaseEnv:
 
   def _getDefaultMinDistance(self, shape_type):
     if shape_type in (constants.CUBE, constants.TRIANGLE, constants.RANDOM, constants.CYLINDER, constants.RANDOM_BLOCK,
-                      constants.BOTTLE, constants.TEST_TUBE, constants.SWAB):
+                      constants.BOTTLE, constants.TEST_TUBE, constants.SWAB, constants.CUBE_BIG, constants.TRIANGLE_BIG):
       min_distance = self.max_block_size * 2.4
     elif shape_type in (constants.BRICK, constants.ROOF, constants.CUP, constants.SPOON, constants.BOX,
                         constants.FLAT_BLOCK):
@@ -532,6 +533,8 @@ class BaseEnv:
 
     if pos is None:
       valid_positions = self._getValidPositions(padding, min_distance, positions, num_shapes)
+      if shape_type in (constants.CUBE_BIG, constants.TRIANGLE_BIG):
+        valid_positions = [[valid_positions[0][0], 0]]
       if valid_positions is None:
         return None
       for position in valid_positions:
@@ -551,9 +554,13 @@ class BaseEnv:
 
       if shape_type == constants.CUBE:
         handle = pb_obj_generation.generateCube(position, orientation, scale)
+      elif shape_type == constants.CUBE_BIG:
+        handle = pb_obj_generation.generateCube(position, orientation, scale)
       elif shape_type == constants.BRICK:
         handle = pb_obj_generation.generateBrick(position, orientation, scale)
       elif shape_type == constants.TRIANGLE:
+        handle = pb_obj_generation.generateTriangle(position, orientation, scale)
+      elif shape_type == constants.TRIANGLE_BIG:
         handle = pb_obj_generation.generateTriangle(position, orientation, scale)
       elif shape_type == constants.ROOF:
         handle = pb_obj_generation.generateRoof(position, orientation, scale)

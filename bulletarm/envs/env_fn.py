@@ -13,7 +13,6 @@ from bulletarm.envs.block_structure_envs.improvise_house_building_2_env import c
 from bulletarm.envs.block_structure_envs.improvise_house_building_3_env import createImproviseHouseBuilding3Env
 from bulletarm.envs.block_structure_envs.improvise_house_building_discrete_env import createImproviseHouseBuildingDiscreteEnv
 from bulletarm.envs.block_structure_envs.improvise_house_building_random_env import createImproviseHouseBuildingRandomEnv
-from bulletarm.envs.block_structure_envs.block_arranging_env import createBlockArrangingEnv
 
 from bulletarm.envs.deconstruct_envs.block_stacking_deconstruct_env import createBlockStackingDeconstructEnv
 from bulletarm.envs.deconstruct_envs.house_building_1_deconstruct_env import createHouseBuilding1DeconstructEnv
@@ -67,6 +66,7 @@ from bulletarm.envs.close_loop_envs.close_loop_household_picking import createCl
 from bulletarm.envs.close_loop_envs.close_loop_household_picking_cluttered import createCloseLoopHouseholdPickingClutteredEnv
 from bulletarm.envs.close_loop_envs.close_loop_block_pushing import createCloseLoopBlockPushingEnv
 from bulletarm.envs.close_loop_envs.close_loop_block_in_bowl import createCloseLoopBlockInBowlEnv
+from bulletarm.envs.close_loop_envs.close_loop_block_arranging import createCloseLoopBlockArrangingEnv
 
 CREATE_ENV_FNS = {
   'block_picking' : createBlockPickingEnv,
@@ -130,5 +130,5 @@ CREATE_ENV_FNS = {
   'close_loop_clutter_picking': createCloseLoopHouseholdPickingClutteredEnv,
   'close_loop_block_pushing': createCloseLoopBlockPushingEnv,
   'close_loop_block_in_bowl': createCloseLoopBlockInBowlEnv,
-  'block_arranging': createBlockArrangingEnv
+  'close_loop_block_arranging': createCloseLoopBlockArrangingEnv
 }
