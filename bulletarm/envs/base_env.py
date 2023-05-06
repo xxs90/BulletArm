@@ -179,6 +179,7 @@ class BaseEnv:
     self.black_workspace = 'black_workspace' in config['workspace_option']
     self.trans_plane = 'trans_plane' in config['workspace_option']
     self.trans_robot = 'trans_robot' in config['workspace_option']
+    self.custom_workspace = 'custom' in config['workspace_option']
     if self.trans_robot and config['robot'] != 'kuka':
       raise NotImplementedError
 
@@ -222,7 +223,8 @@ class BaseEnv:
                                  baseVisualShapeIndex=ws_visual,
                                  basePosition=[self.workspace[0].mean(), self.workspace[1].mean(), 0],
                                  baseOrientation=[0, 0, 0, 1])
-
+    elif self.custom_workspace:
+      self.createMat()
     # Load the UR5 and set it to the home positions
     self.robot.initialize()
     if self.trans_robot:
@@ -1163,3 +1165,5 @@ class BaseEnv:
       state = pickle.load(f)
     self.restoreStateDict(state)
 
+  def createMat(self):
+    NotImplementedError # must be implemented in task subclass if "custom_workspace" in worksapce_option

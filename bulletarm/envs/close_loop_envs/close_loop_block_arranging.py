@@ -21,8 +21,8 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
     super().__init__(config)
     self.goal_pos_cube = self.workspace.mean(1)[:2]
     self.goal_pos_tri = self.workspace.mean(1)[:2]
-    self.arrange_stack = True
-    self.arrange_sort = False
+    self.arrange_stack = False
+    self.arrange_sort = True
 
 
   def reset(self):

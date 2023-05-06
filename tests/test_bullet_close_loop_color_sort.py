@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 from bulletarm import env_factory
 
-class TestBulletCloseLoopBlockPushing(unittest.TestCase):
-  env_config = {}
+class TestBulletCloseLoopBlockColorSort(unittest.TestCase):
+  env_config = {'workspace_option':'custom'}
 
   planner_config = {'random_orientation': True, 'dpos': 0.05, 'drot': np.pi / 4}
 
@@ -16,7 +16,7 @@ class TestBulletCloseLoopBlockPushing(unittest.TestCase):
     self.env_config['render'] = True
     self.env_config['seed'] = 0
     num_processes = 1
-    env = env_factory.createEnvs(num_processes, 'close_loop_block_pushing', self.env_config, self.planner_config)
+    env = env_factory.createEnvs(num_processes, 'close_loop_block_color_sort', self.env_config, self.planner_config)
     total = 0
     s = 0
     step_times = []
@@ -51,5 +51,7 @@ class TestBulletCloseLoopBlockPushing(unittest.TestCase):
       )
     env.close()
 
+
 if __name__ == "__main__":
-  TestBulletCloseLoopBlockPushing().testPlanner2()
+
+  TestBulletCloseLoopBlockColorSort().testPlanner2()
