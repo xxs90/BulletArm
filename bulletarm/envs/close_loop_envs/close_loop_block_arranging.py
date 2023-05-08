@@ -59,15 +59,16 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
   def _checkTermination(self):
     ''''''
     if self.arrange_stack:
+      blocks = list(filter(lambda x: self.object_types[x] == constants.CUBE, self.objects))
+      triangles = list(filter(lambda x: self.object_types[x] == constants.TRIANGLE, self.objects))
+      return not self._isHolding() and self._checkStack(blocks + triangles) and self._checkObjUpright(triangles[0]) and self._isObjOnTop(triangles[0])
+
+    if self.arrange_sort:
       obj_pos_cube = self.objects[0].getPosition()[:2]
       obj_pos_tri = self.objects[1].getPosition()[:2]
       sort_cube = abs(obj_pos_cube[1] - self.goal_pos_cube[1]) < 0.02
       sort_tri = abs(obj_pos_tri[1] - self.goal_pos_tri[1]) < 0.02
       return sort_cube and sort_tri
-    if self.arrange_sort:
-      blocks = list(filter(lambda x: self.object_types[x] == constants.CUBE, self.objects))
-      triangles = list(filter(lambda x: self.object_types[x] == constants.TRIANGLE, self.objects))
-      return not self._isHolding() and self._checkStack(blocks + triangles) and self._checkObjUpright(triangles[0]) and self._isObjOnTop(triangles[0])
 
 
   def isSimValid(self):
@@ -86,20 +87,20 @@ def createCloseLoopBlockArrangingEnv(config):
   return CloseLoopBlockArrangingEnv(config)
 
 
-if __name__ == '__main__':
-  env = CloseLoopBlockArrangingEnv({'seed': 0, 'render': True})
-
-  if env.arrange_stack:
-    planner = CloseLoopHouseBuilding1Planner(env, {})
-  if env.arrange_sort:
-    planner = CloseLoopBlockArrangingPlanner(env, {})
-  else:
-    print('no task entered')
-  env.reset()
-
-  while True:
-    action = planner.getNextAction()
-    (state, obs, in_hands), reward, done = env.step(action)
-
-    if done:
-      env.reset()
+# if __name__ == '__main__':
+#   env = CloseLoopBlockArrangingEnv({'seed': 0, 'render': True})
+#
+#   if env.arrange_stack:
+#     planner = CloseLoopHouseBuilding1Planner(env, {})
+#   if env.arrange_sort:
+#     planner = CloseLoopBlockArrangingPlanner(env, {})
+#   else:
+#     print('no task entered')
+#   env.reset()
+#
+#   while True:
+#     action = planner.getNextAction()
+#     (state, obs, in_hands), reward, done = env.step(action)
+#
+#     if done:
+#       env.reset()
