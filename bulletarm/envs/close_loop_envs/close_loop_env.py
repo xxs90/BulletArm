@@ -43,7 +43,8 @@ class CloseLoopEnv(BaseEnv):
                               'camera_side_rgbd_45', 'camera_side_rgbd_60', 'camera_side_rgbd_75',
                               'camera_side_rgbd_90', 'camera_side_rgbd_undis', 'camera_side_rgbd_60_undis',
                               'camera_side_rgbd_reflect', 'camera_center_xyz_reflect',
-                              'camera_side_rgbd_random_reflect', 'camera_fix_rgbd', 'render_center_side']
+                              'camera_side_rgbd_random_reflect', 'camera_fix_rgbd', 'render_center_side',
+                              'camera_center_xyz_rgbd']
     self.view_scale = config['view_scale']
     self.robot_type = config['robot']
     if config['robot'] == 'kuka':
@@ -249,6 +250,19 @@ class CloseLoopEnv(BaseEnv):
           heightmap[gripper_img == 1] = gripper_pos[2]
         else:
           heightmap[gripper_img == 1] = 0
+      elif self.view_type in ['camera_center_xyz_rgbd']:
+        gripper_img = self.getGripperImg()
+        if self.view_type.find('height') > -1:
+          gripper_pos = self.robot._getEndEffectorPosition()
+          heightmap[gripper_img == 1] = gripper_pos[2]
+        else:
+          rgb_img = heightmap[:3]
+          heightmap = heightmap[3]
+          heightmap[gripper_img == 1] = 0
+          heightmap = np.expand_dims(heightmap, 0)
+          heightmap = np.concatenate([rgb_img, heightmap])
+
+
       # add channel dimension if view is depth only
       if self.view_type.find('rgb') == -1:
         heightmap = heightmap.reshape([1, self.heightmap_size, self.heightmap_size])
@@ -357,7 +371,7 @@ class CloseLoopEnv(BaseEnv):
       else:
         depth = heightmap
       return depth
-    elif self.view_type in ['camera_center_xyz', 'camera_center_xyz_height', 'camera_center_xyz_reflect']:
+    elif self.view_type in ['camera_center_xyz', 'camera_center_xyz_height', 'camera_center_xyz_reflect', 'camera_center_xyz_rgbd']:
       # xyz centered, gripper will be visible
       gripper_pos[2] += gripper_z_offset
       target_pos = [gripper_pos[0], gripper_pos[1], 0]
@@ -369,6 +383,11 @@ class CloseLoopEnv(BaseEnv):
       elif self.view_type == 'camera_center_xyz_reflect':
         depth = -heightmap + gripper_pos[2]
         depth = depth[:, ::-1]
+      elif self.view_type == 'camera_center_xyz_rgbd':
+        rgb_img = self.sensor.getRGBImg(self.heightmap_size)
+        depth = -heightmap + gripper_pos[2]
+        depth = np.expand_dims(depth, 0)
+        depth = np.concatenate([rgb_img, depth])
       else:
         depth = heightmap
       return depth
