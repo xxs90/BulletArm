@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from bulletarm import env_factory
 
 class TestBulletCloseLoopBlockArranging(unittest.TestCase):
-  env_config = {}
+  env_config = {'planner_mix_sort': False, 'planner_mix_stack': True}
 
   planner_config = {'random_orientation': True, 'dpos': 0.05, 'drot': np.pi / 4}
 

@@ -4,8 +4,6 @@ import numpy as np
 from bulletarm.pybullet.utils import constants
 from bulletarm.envs.close_loop_envs.close_loop_env import CloseLoopEnv
 from bulletarm.pybullet.utils import transformations
-from bulletarm.planners.close_loop_house_building_1_planner import CloseLoopHouseBuilding1Planner
-from bulletarm.planners.close_loop_block_arranging_planner import CloseLoopBlockArrangingPlanner
 from bulletarm.pybullet.utils.constants import NoValidPositionException
 
 class CloseLoopBlockArrangingEnv(CloseLoopEnv):
@@ -18,11 +16,16 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
   '''
   def __init__(self, config):
     # env specific parameters
+    if 'num_objects' not in config:
+      config['num_objects'] = 2
     super().__init__(config)
+    self.arrange_stack = config['planner_mix_stack'] and True
+    self.arrange_sort = config['planner_mix_sort'] and True
     self.goal_pos_cube = self.workspace.mean(1)[:2]
     self.goal_pos_tri = self.workspace.mean(1)[:2]
-    self.arrange_stack = False
-    self.arrange_sort = True
+    if self.arrange_stack and self.arrange_sort and True:
+      print('---------------incorrect environment---------------')
+      self.arrange_sort = False
 
 
   def reset(self):
@@ -56,6 +59,14 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
     return self._getObservation()
 
 
+  def _getValidOrientation(self, random_orientation):
+    if random_orientation:
+      orientation = pb.getQuaternionFromEuler([0., 0., np.pi * (np.random.random_sample() - 0.5)])
+    else:
+      orientation = pb.getQuaternionFromEuler([0., 0., 0.])
+    return orientation
+
+
   def _checkTermination(self):
     ''''''
     if self.arrange_stack:
@@ -85,22 +96,3 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
 
 def createCloseLoopBlockArrangingEnv(config):
   return CloseLoopBlockArrangingEnv(config)
-
-
-# if __name__ == '__main__':
-#   env = CloseLoopBlockArrangingEnv({'seed': 0, 'render': True})
-#
-#   if env.arrange_stack:
-#     planner = CloseLoopHouseBuilding1Planner(env, {})
-#   if env.arrange_sort:
-#     planner = CloseLoopBlockArrangingPlanner(env, {})
-#   else:
-#     print('no task entered')
-#   env.reset()
-#
-#   while True:
-#     action = planner.getNextAction()
-#     (state, obs, in_hands), reward, done = env.step(action)
-#
-#     if done:
-#       env.reset()
