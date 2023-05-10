@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from bulletarm import env_factory
 
 class TestBulletCloseLoopBlockColorSort(unittest.TestCase):
-  env_config = {'workspace_option':'custom'}
+  env_config = {'workspace_option':'custom', 'view_type':'camera_center_xyz_rgbd', 'workspace_option':'custom,white_plane'}
 
   planner_config = {'random_orientation': True, 'dpos': 0.05, 'drot': np.pi / 4}
 

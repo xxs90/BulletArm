@@ -180,8 +180,12 @@ class BaseEnv:
     self.trans_plane = 'trans_plane' in config['workspace_option']
     self.trans_robot = 'trans_robot' in config['workspace_option']
     self.custom_workspace = 'custom' in config['workspace_option']
-    if self.trans_robot and config['robot'] != 'kuka':
+    if self.trans_robot and config['robot'] in ['kuka', 'panda']:
+      print('robot is all invisible')
+    else:
       raise NotImplementedError
+
+
 
     self.robot.adjust_gripper_after_lift = config['adjust_gripper_after_lift']
     if config['robot'] == 'kuka':
@@ -228,7 +232,7 @@ class BaseEnv:
     # Load the UR5 and set it to the home positions
     self.robot.initialize()
     if self.trans_robot:
-      for i in range(-1, 9):
+      for i in range(-1, 11):
         pb.changeVisualShape(self.robot.id, i, rgbaColor=[1, 1, 1, 0])
       pb.changeVisualShape(self.robot.id, 11, rgbaColor=[1, 1, 1, 0])
     # Reset episode vars
@@ -536,7 +540,8 @@ class BaseEnv:
     if pos is None:
       valid_positions = self._getValidPositions(padding, min_distance, positions, num_shapes)
       if shape_type in (constants.CUBE_BIG, constants.TRIANGLE_BIG):
-        valid_positions = [[valid_positions[0][0], 0]]
+        random_y = np.random.random()*0.03-0.015
+        valid_positions = [[valid_positions[0][0], random_y]]
       if valid_positions is None:
         return None
       for position in valid_positions:
