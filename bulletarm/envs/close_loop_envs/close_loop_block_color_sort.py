@@ -36,7 +36,7 @@ class CloseLoopBlockColorSortEnv(CloseLoopEnv):
                                 baseOrientation=[0, 0, 0, 1])
     self.ws_id = [ws_id1, ws_id2]
 
-  def randSampleGray(self, bin_num=10):
+  def randSampleGray(self, bin_num=10, dist='uniform'):
     
     bins = np.arange(0,255,255/bin_num)
 
@@ -45,10 +45,17 @@ class CloseLoopBlockColorSortEnv(CloseLoopEnv):
     even_idx = np.random.choice(even_num)
     odd_idx = np.random.choice(odd_num)
     # np.digitize(mylist,bins)
-    left_gray = bins[even_idx]
-    left_gray = (np.random.random()*255/bin_num+left_gray)/255
-    right_gray = bins[odd_idx]
-    right_gray = (np.random.random()*255/bin_num+right_gray)/255
+    if dist == 'uniform':
+      left_gray = bins[even_idx]
+      left_gray = (np.random.random()*255/bin_num+left_gray)/255
+      right_gray = bins[odd_idx]
+      right_gray = (np.random.random()*255/bin_num+right_gray)/255
+    elif dist == 'gaussian':
+      sigma = 1/bin_num*1.5
+      left_gray = bins[even_idx]/255
+      right_gray = bins[odd_idx]/255
+      left_gray = np.clip(np.random.normal(left_gray, sigma), 0, 1)
+      right_gray = np.clip(np.random.normal(right_gray, sigma), 0, 1)
 
     # left_red = bins[odd_idx]
     # left_red = (np.random.random()*255/bin_num+left_red)/255
@@ -63,6 +70,9 @@ class CloseLoopBlockColorSortEnv(CloseLoopEnv):
     # left_green = (np.random.random()*255/bin_num+left_green)/255
     # right_green = bins[threeone_idx]
     # right_green = (np.random.random()*255/bin_num+right_green)/255
+
+    left_random = np.random.random()
+    right_random = np.random.random()
 
     left_rgba = [left_gray, left_gray, left_gray, 1]
     right_rgba = [right_gray, right_gray, right_gray, 1]
@@ -90,7 +100,7 @@ class CloseLoopBlockColorSortEnv(CloseLoopEnv):
         pb.changeVisualShape(self.handle_triangle[0].object_id, -1, rgbaColor=[1, 1, 0, 1])
 
         # change workspace color
-        left_rgba, right_rgba = self.randSampleGray(60)
+        left_rgba, right_rgba = self.randSampleGray(3000, dist='gaussian')
         # print(left_rgba, right_rgba)
         pb.changeVisualShape(self.ws_id[0], -1, rgbaColor=left_rgba)
         pb.changeVisualShape(self.ws_id[1], -1, rgbaColor=right_rgba)
@@ -132,11 +142,11 @@ def createCloseLoopBlockColorSortEnv(config):
 
 
 if __name__ == '__main__':
-  env = CloseLoopBlockColorSortEnv({'seed': 0, 'render': True, 'workspace_option': 'custom,trans_robot', 'view_type': 'camera_center_xyz_rgbd', 'robot':'panda'})
+  env = CloseLoopBlockColorSortEnv({'seed': 0, 'render': True, 'workspace_option': 'custom,trans_robot,random_init_gripper', 'view_type': 'camera_center_xyz_rgbd_noGripper', 'robot':'panda'})
 
 
   planner = CloseLoopBlockArrangingPlanner(env, {})
-  env.reset()
+  (state, in_hands, obs) = env.reset()
 
   while True:
     action = planner.getNextAction()
@@ -144,4 +154,5 @@ if __name__ == '__main__':
 
     if done:
       # print('done')
-      env.reset()
+      (state, in_hands, obs) = env.reset()
+      print(1)

@@ -183,7 +183,7 @@ class BaseEnv:
     if self.trans_robot and config['robot'] in ['kuka', 'panda']:
       print('robot is all invisible')
     else:
-      raise NotImplementedError
+      print('robot is visible')
 
 
 
