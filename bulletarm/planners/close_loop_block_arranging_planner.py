@@ -3,31 +3,33 @@ import scipy
 from bulletarm.planners.close_loop_planner import CloseLoopPlanner
 from bulletarm.pybullet.utils import constants
 from bulletarm.pybullet.utils import transformations
+from bulletarm.envs.close_loop_envs.close_loop_block_arranging import CloseLoopBlockArrangingEnv
 
 
 class CloseLoopBlockArrangingPlanner(CloseLoopPlanner):
   def __init__(self, env, config):
     super().__init__(env, config)
-    self.arrange_stack = env.arrange_stack and True
-    self.arrange_sort = env.arrange_sort and True
+    # self.arrange_sort = env.arrange_sort and True
 
-    if self.arrange_stack:
-      self.pick_place_stage = 0
-      self.current_target = None
-      self.previous_target = None
-      self.target_obj = None
-    elif self.arrange_sort:
-      self.target_push = None
-      self.stage = 0
-      self.pre_push_start_pos_cube = self.env.workspace.mean(1)
-      self.push_start_pos_cube = self.env.workspace.mean(1)
-      self.push_end_pos_cube = self.env.workspace.mean(1)
-      self.push_rot = 0
-      self.pre_push_start_pos_tri = self.env.workspace.mean(1)
-      self.push_start_pos_tri = self.env.workspace.mean(1)
-      self.push_end_pos_tri = self.env.workspace.mean(1)
-      self.push_rot_tri = 0
+    # if self.arrange_stack:
+    self.pick_place_stage = 0
+    self.current_target = None
+    self.previous_target = None
+    self.target_obj = None
+    # else:
+    self.target_push = None
+    self.stage = 0
+    self.pre_push_start_pos_cube = self.env.workspace.mean(1)
+    self.push_start_pos_cube = self.env.workspace.mean(1)
+    self.push_end_pos_cube = self.env.workspace.mean(1)
+    self.push_rot = 0
+    self.pre_push_start_pos_tri = self.env.workspace.mean(1)
+    self.push_start_pos_tri = self.env.workspace.mean(1)
+    self.push_end_pos_tri = self.env.workspace.mean(1)
+    self.push_rot_tri = 0
 
+  def setPlannerFlag(self, flag):
+    self.arrange_stack = flag
 
   def getNextActionToCurrentTarget(self):
     if self.arrange_stack:
@@ -39,7 +41,7 @@ class CloseLoopBlockArrangingPlanner(CloseLoopPlanner):
       else:
         primitive = constants.PICK_PRIMATIVE if self.isHolding() else constants.PLACE_PRIMATIVE
       return self.env._encodeAction(primitive, x, y, z, r)
-    elif self.arrange_sort:
+    else:
       x, y, z, r = self.getActionByGoalPose(self.target_push[0], self.target_push[1])
       p = self.target_push[2]
       if np.all(np.abs([x, y, z]) < self.dpos) and (not self.random_orientation or np.abs(r) < self.drot):
@@ -143,7 +145,7 @@ class CloseLoopBlockArrangingPlanner(CloseLoopPlanner):
           self.target_obj = None
           self.current_target = (pre_place_pos, object_rot, constants.PLACE_PRIMATIVE)
 
-    elif self.arrange_sort:
+    else:
       if self.stage == 0:
         self.setWaypoints()
         # to pre push start pos
@@ -174,8 +176,10 @@ class CloseLoopBlockArrangingPlanner(CloseLoopPlanner):
         self.target_push = (self.push_end_pos_tri, self.push_rot_tri, 0.5, 0.5)
         self.stage = 0
 
-
+  def setFlag(self, flag):
+    self.arrange_stack = flag
   def getNextAction(self):
+
     if self.arrange_stack:
       if self.env.current_episode_steps == 1:
         self.pick_place_stage = 0
@@ -188,7 +192,7 @@ class CloseLoopBlockArrangingPlanner(CloseLoopPlanner):
         self.setNewTarget()
         return self.getNextActionToCurrentTarget()
 
-    elif self.arrange_sort:
+    else:
       if self.env.current_episode_steps == 1:
         self.target_push = None
         self.stage = 0

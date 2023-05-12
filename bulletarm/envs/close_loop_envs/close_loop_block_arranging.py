@@ -19,17 +19,19 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
     if 'num_objects' not in config:
       config['num_objects'] = 2
     super().__init__(config)
-    self.arrange_stack = config['planner_mix_stack'] and True
-    self.arrange_sort = config['planner_mix_sort'] and True
+    # self.arrange_stack = config['planner_mix_stack'] and True
+    # self.arrange_sort = config['planner_mix_sort'] and True
     self.goal_pos_cube = self.workspace.mean(1)[:2]
     self.goal_pos_tri = self.workspace.mean(1)[:2]
-    if self.arrange_stack and self.arrange_sort and True:
-      print('---------------incorrect environment---------------')
-      self.arrange_sort = False
+    # if self.arrange_stack and self.arrange_sort and True:
+    #   print('---------------incorrect environment---------------')
+    #   self.arrange_sort = False
+    self.arrange_stack = True
 
+  def setFlag(self, flag):
+    self.arrange_stack = flag
 
   def reset(self):
-
     while True:
       self.resetPybulletWorkspace()
       if self.arrange_stack:
@@ -41,7 +43,7 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
           # generate red blocks
           pb.changeVisualShape(3, -1, rgbaColor=[1, 0, 0, 1])
           pb.changeVisualShape(4, -1, rgbaColor=[1, 0, 0, 1])
-        if self.arrange_sort:
+        else:
           self._generateShapes(constants.CUBE_BIG, 1, scale=1, random_orientation=self.random_orientation)
           self._generateShapes(constants.TRIANGLE_BIG, 1, scale=1, random_orientation=self.random_orientation)
           # generate yellow blocks
@@ -74,7 +76,7 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
       triangles = list(filter(lambda x: self.object_types[x] == constants.TRIANGLE, self.objects))
       return not self._isHolding() and self._checkStack(blocks + triangles) and self._checkObjUpright(triangles[0]) and self._isObjOnTop(triangles[0])
 
-    if self.arrange_sort:
+    else:
       obj_pos_cube = self.objects[0].getPosition()[:2]
       obj_pos_tri = self.objects[1].getPosition()[:2]
       sort_cube = abs(obj_pos_cube[1] - self.goal_pos_cube[1]) < 0.02
