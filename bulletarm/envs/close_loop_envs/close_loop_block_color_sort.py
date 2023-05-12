@@ -19,6 +19,7 @@ class CloseLoopBlockColorSortEnv(CloseLoopEnv):
   def __init__(self, config):
     # env specific parameters
     super().__init__(config)
+    self.bin_num = config['bin_num']
     self.goal_pos_cube = None
     self.goal_pos_tri = None
     # self.workspace_size = self.workspace[0,1]-self.workspace[0,0]
@@ -100,7 +101,8 @@ class CloseLoopBlockColorSortEnv(CloseLoopEnv):
         pb.changeVisualShape(self.handle_triangle[0].object_id, -1, rgbaColor=[1, 1, 0, 1])
 
         # change workspace color
-        left_rgba, right_rgba = self.randSampleGray(3000, dist='gaussian')
+        print(self.bin_num)
+        left_rgba, right_rgba = self.randSampleGray(self.bin_num, dist='gaussian')
         # print(left_rgba, right_rgba)
         pb.changeVisualShape(self.ws_id[0], -1, rgbaColor=left_rgba)
         pb.changeVisualShape(self.ws_id[1], -1, rgbaColor=right_rgba)
