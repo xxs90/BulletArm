@@ -44,7 +44,7 @@ class CloseLoopEnv(BaseEnv):
                               'camera_side_rgbd_90', 'camera_side_rgbd_undis', 'camera_side_rgbd_60_undis',
                               'camera_side_rgbd_reflect', 'camera_center_xyz_reflect',
                               'camera_side_rgbd_random_reflect', 'camera_fix_rgbd', 'render_center_side',
-                              'camera_center_xyz_rgbd']
+                              'camera_center_xyz_rgbd', 'camera_center_xyz_noGripper', 'camera_center_xyz_rgbd_noGripper']
     self.view_scale = config['view_scale']
     self.robot_type = config['robot']
     if config['robot'] == 'kuka':
@@ -70,6 +70,10 @@ class CloseLoopEnv(BaseEnv):
 
     self.simulate_pos = None
     self.simulate_rot = None
+    if 'random_init_gripper' in config['workspace_option']:
+      self.random_init_gripper = True
+    else:
+      self.random_init_gripper = True
 
   def initialize(self):
     super().initialize()
@@ -115,7 +119,14 @@ class CloseLoopEnv(BaseEnv):
   def resetPybulletWorkspace(self):
     self.renderer.clearPoints()
     super().resetPybulletWorkspace()
-    self.robot.moveTo([self.workspace[0].mean(), self.workspace[1].mean(), 0.2], transformations.quaternion_from_euler(0, 0, 0))
+    if self.random_init_gripper:
+      random_size = 0.05
+      random_x = np.random.random()*random_size-random_size/2+self.workspace[0].mean()
+      random_y = np.random.random()*random_size-random_size/2+self.workspace[1].mean()
+      self.robot.moveTo([random_x, random_y, 0.2], transformations.quaternion_from_euler(0, 0, 0))
+    else:
+      self.robot.moveTo([self.workspace[0].mean(), self.workspace[1].mean(), 0.2], transformations.quaternion_from_euler(0, 0, 0))
+
     self.simulate_pos = self.robot._getEndEffectorPosition()
     self.simulate_rot = transformations.euler_from_quaternion(self.robot._getEndEffectorRotation())
 
@@ -245,12 +256,15 @@ class CloseLoopEnv(BaseEnv):
       if self.view_type in ['camera_center_xyz', 'camera_center_xyz_height', 'render_center', 'render_center_height',
                             'render_center_side']:
         gripper_img = self.getGripperImg()
-        if self.view_type.find('height') > -1:
+        if self.view_type.find('noGripper') > -1:
+          heightmap = heightmap
+        elif self.view_type.find('height') > -1:
           gripper_pos = self.robot._getEndEffectorPosition()
           heightmap[gripper_img == 1] = gripper_pos[2]
         else:
           heightmap[gripper_img == 1] = 0
-      elif self.view_type in ['camera_center_xyz_rgbd']:
+        
+      elif self.view_type in ['camera_center_xyz_rgbd', 'camera_center_xyz_rgbd_noGripper']:
         gripper_img = self.getGripperImg()
         if self.view_type.find('height') > -1:
           gripper_pos = self.robot._getEndEffectorPosition()
@@ -258,7 +272,10 @@ class CloseLoopEnv(BaseEnv):
         else:
           rgb_img = heightmap[:3]
           heightmap = heightmap[3]
-          heightmap[gripper_img == 1] = 0
+          if self.view_type.find('noGripper') > -1:
+            heightmap = heightmap
+          else:
+            heightmap[gripper_img == 1] = 0
           heightmap = np.expand_dims(heightmap, 0)
           heightmap = np.concatenate([rgb_img, heightmap])
 
@@ -371,19 +388,19 @@ class CloseLoopEnv(BaseEnv):
       else:
         depth = heightmap
       return depth
-    elif self.view_type in ['camera_center_xyz', 'camera_center_xyz_height', 'camera_center_xyz_reflect', 'camera_center_xyz_rgbd']:
+    elif self.view_type in ['camera_center_xyz', 'camera_center_xyz_height', 'camera_center_xyz_reflect', 'camera_center_xyz_rgbd', 'camera_center_xyz_noGripper', 'camera_center_xyz_rgbd_noGripper']:
       # xyz centered, gripper will be visible
       gripper_pos[2] += gripper_z_offset
       target_pos = [gripper_pos[0], gripper_pos[1], 0]
       cam_up_vector = [-1, 0, 0]
       self.sensor.setCamMatrix(gripper_pos, cam_up_vector, target_pos)
       heightmap = self.sensor.getHeightmap(self.heightmap_size)
-      if self.view_type == 'camera_center_xyz':
+      if self.view_type in ['camera_center_xyz', 'camera_center_xyz_noGripper']:
         depth = -heightmap + gripper_pos[2]
       elif self.view_type == 'camera_center_xyz_reflect':
         depth = -heightmap + gripper_pos[2]
         depth = depth[:, ::-1]
-      elif self.view_type == 'camera_center_xyz_rgbd':
+      elif self.view_type in ['camera_center_xyz_rgbd', 'camera_center_xyz_rgbd_noGripper']:
         rgb_img = self.sensor.getRGBImg(self.heightmap_size)
         depth = -heightmap + gripper_pos[2]
         depth = np.expand_dims(depth, 0)
