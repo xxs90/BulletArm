@@ -36,7 +36,11 @@ class Sensor(object):
     image_arr = pb.getCameraImage(width=size, height=size,
                                   viewMatrix=self.view_matrix,
                                   projectionMatrix=self.proj_matrix,
-                                  renderer=pb.ER_TINY_RENDERER)
+                                  renderer=pb.ER_TINY_RENDERER, lightDirection=[0.45, 0, 1])
+    # image_arr = pb.getCameraImage(width=size, height=size,
+    #                               viewMatrix=self.view_matrix,
+    #                               projectionMatrix=self.proj_matrix,
+    #                               renderer=pb.ER_TINY_RENDERER)
     rgb_img = np.moveaxis(image_arr[2][:, :, :3], 2, 0) / 255
     return rgb_img
 
