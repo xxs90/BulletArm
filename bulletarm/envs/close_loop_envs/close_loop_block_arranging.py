@@ -38,17 +38,14 @@ class CloseLoopBlockArrangingEnv(CloseLoopEnv):
         self.robot.moveTo([self.workspace[0].mean(), self.workspace[1].mean(), 0.2], transformations.quaternion_from_euler(0, 0, 0))
       try:
         if self.arrange_stack:
-          self._generateShapes(constants.TRIANGLE, 1, scale=0.8, random_orientation=self.random_orientation)
-          self._generateShapes(constants.CUBE, 1, scale=0.8, random_orientation=self.random_orientation)
-          # generate red blocks
-          # pb.changeVisualShape(3, -1, rgbaColor=[1, 0, 0, 1])
-          # pb.changeVisualShape(4, -1, rgbaColor=[1, 0, 0, 1])
+          self.handle_triangle = self._generateShapes(constants.TRIANGLE, 1, scale=1, random_orientation=self.random_orientation)
+          self.handle_cube = self._generateShapes(constants.CUBE, 1, scale=1, random_orientation=self.random_orientation)
+          # generate different color for stack
+          pb.changeVisualShape(self.handle_cube[0].object_id, -1, rgbaColor=[0, 0, 1, 1])
+          pb.changeVisualShape(self.handle_triangle[0].object_id, -1, rgbaColor=[0, 1, 0, 1])
         else:
-          self._generateShapes(constants.CUBE_BIG, 1, scale=1.2, random_orientation=self.random_orientation)
-          self._generateShapes(constants.TRIANGLE_BIG, 1, scale=1.2, random_orientation=self.random_orientation)
-          # generate yellow blocks
-          # pb.changeVisualShape(3, -1, rgbaColor=[1, 1, 0, 1])
-          # pb.changeVisualShape(4, -1, rgbaColor=[1, 1, 0, 1])
+          self._generateShapes(constants.CUBE_BIG, 1, scale=1, random_orientation=self.random_orientation)
+          self._generateShapes(constants.TRIANGLE_BIG, 1, scale=1, random_orientation=self.random_orientation)
 
           # left side and right side sorting task
           self.goal_pos_cube = [0.45, -0.09]
